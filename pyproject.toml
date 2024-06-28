@@ -1,11 +1,11 @@
 [tool.poetry]
-name = "fastapi-problem"
+name = "starlette-problem"
 version = "0.8.0"
-description = "FastAPI support for RFC9457 problems."
+description = "Starlette support for RFC9457 problems."
 authors = ["Daniel Edgecombe <edgy.edgemond@gmail.com>"]
 license = "Apache-2.0"
-repository="https://github.com/NRWLDev/fastapi-problem/"
-homepage="https://github.com/NRWLDev/fastapi-problem/"
+repository="https://github.com/NRWLDev/starlette-problem/"
+homepage="https://github.com/NRWLDev/starlette-problem/"
 readme = "README.md"
 
 [tool.poetry.dependencies]
@@ -48,8 +48,8 @@ allowed_branches = [
     "main",
 ]
 date_format = "- %Y-%m-%d"
-issue_link = "https://github.com/NRWLDev/fastapi-problem/issues/::issue_ref::"
-commit_link = "https://github.com/NRWLDev/fastapi-problem/commit/::commit_hash::"
+issue_link = "https://github.com/NRWLDev/starlette-problem/issues/::issue_ref::"
+commit_link = "https://github.com/NRWLDev/starlette-problem/commit/::commit_hash::"
 
 [tool.pytest.ini_options]
 asyncio_mode = "auto"
@@ -70,7 +70,7 @@ exclude_lines = [
 
 [tool.coverage.run]
 branch = true
-source = ["src/fastapi_problem"]
+source = ["src/starlette_problem"]
 
 [tool.ruff]
 line-length = 120
@@ -91,7 +91,7 @@ ignore = [
 "examples/*" = ["ALL"]
 
 [tool.ruff.lint.isort]
-known-first-party = ["fastapi_problem"]
+known-first-party = ["starlette_problem"]
 
 [tool.ruff.lint.flake8-quotes]
 docstring-quotes = "double"

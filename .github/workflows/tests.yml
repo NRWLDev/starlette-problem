@@ -29,12 +29,12 @@ jobs:
         poetry install
     - name: Generate coverage report
       run: |
-        pytest --cov=src/fastapi_problem --cov-report=xml
+        pytest --cov=src/starlette_problem --cov-report=xml
     - name: Upload coverage to Codecov
       uses: codecov/codecov-action@v1
       with:
         token: ${{ secrets.CODECOV_TOKEN }}
-        slug: NRWLDev/fastapi-problem
+        slug: NRWLDev/starlette-problem
         file: ./coverage.xml
         flags: unittests
         name: codecov-umbrella
