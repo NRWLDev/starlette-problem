@@ -1,19 +1,19 @@
-# FastAPI Problems
-[![image](https://img.shields.io/pypi/v/fastapi_problem.svg)](https://pypi.org/project/fastapi-problem/)
-[![image](https://img.shields.io/pypi/l/fastapi_problem.svg)](https://pypi.org/project/fastapi-problem/)
-[![image](https://img.shields.io/pypi/pyversions/fastapi_problem.svg)](https://pypi.org/project/fastapi-problem/)
-![style](https://github.com/NRWLDev/fastapi-problem/actions/workflows/style.yml/badge.svg)
-![tests](https://github.com/NRWLDev/fastapi-problem/actions/workflows/tests.yml/badge.svg)
-[![codecov](https://codecov.io/gh/NRWLDev/fastapi-problem/branch/main/graph/badge.svg)](https://codecov.io/gh/NRWLDev/fastapi-problem)
+# Starlette Problems
+[![image](https://img.shields.io/pypi/v/starlette_problem.svg)](https://pypi.org/project/starlette-problem/)
+[![image](https://img.shields.io/pypi/l/starlette_problem.svg)](https://pypi.org/project/starlette-problem/)
+[![image](https://img.shields.io/pypi/pyversions/starlette_problem.svg)](https://pypi.org/project/starlette-problem/)
+![style](https://github.com/NRWLDev/starlette-problem/actions/workflows/style.yml/badge.svg)
+![tests](https://github.com/NRWLDev/starlette-problem/actions/workflows/tests.yml/badge.svg)
+[![codecov](https://codecov.io/gh/NRWLDev/starlette-problem/branch/main/graph/badge.svg)](https://codecov.io/gh/NRWLDev/starlette-problem)
 
-`fastapi_problem` is a set of exceptions and handlers for use in fastapi
+`starlette_problem` is a set of exceptions and handlers for use in starlette
 applications to support easy error management and responses.
 
 Each exception easily marshals to JSON based on the
 [RFC9457](https://www.rfc-editor.org/rfc/rfc9457.html) spec for use in api
 errors.
 
-Check the [docs](https://nrwldev.github.io/fastapi-problem) for more details.
+Check the [docs](https://nrwldev.github.io/starlette-problem) for more details.
 
 ## Custom Errors
 
@@ -21,7 +21,7 @@ Subclassing the convenience classes provide a simple way to consistently raise t
 with details/extras changing based on the raised context.
 
 ```python
-from fastapi_problem.error import NotFoundProblem
+from starlette_problem.error import NotFoundProblem
 
 
 class UserNotFoundError(NotFoundProblem):
@@ -42,11 +42,11 @@ raise UserNotFoundError(details="details")
 ## Usage
 
 ```python
-import fastapi
-from fastapi_problem.handler import add_exception_handler
+import starlette.applications
+from starlette_problem.handler import add_exception_handler
 
 
-app = fastapi.FastAPI()
+app = starlette.applications.Starlette()
 add_exception_handler(app)
 
 @app.get("/user")

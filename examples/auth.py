@@ -1,6 +1,6 @@
 """
 Run this example:
-$ fastapi dev examples/auth.py
+$ uvicorn examples.auth:app
 
 To see a 401 response.
 $ curl http://localhost:8000/authorized
@@ -12,13 +12,18 @@ To see an authorized response.
 $ curl http://localhost:8000/authorized -H "Authorization: Bearer permitted"
 """
 
-import fastapi
-from fastapi.security.http import HTTPAuthorizationCredentials, HTTPBearer
-from fastapi_problem.error import (
+import starlette
+import starlette.applications
+from starlette.routing import Route
+from starlette.authentication import AuthCredentials, AuthenticationBackend, AuthenticationError, SimpleUser
+from starlette.middleware import Middleware
+from starlette.middleware.authentication import AuthenticationMiddleware
+from starlette.responses import JSONResponse
+from starlette_problem.error import (
     ForbiddenProblem,
     UnauthorisedProblem,
 )
-from fastapi_problem.handler import add_exception_handler
+from starlette_problem.handler import add_exception_handler
 
 
 class AuthorizationRequiredError(UnauthorisedProblem):
@@ -29,30 +34,32 @@ class PermissionRequiredError(ForbiddenProblem):
     title = "Permission required."
 
 
-async def check_auth(
-    request: fastapi.Request,
-    authorization: HTTPAuthorizationCredentials = fastapi.Depends(HTTPBearer(auto_error=False)),
-) -> bool:
-    if authorization is None:
-        msg = "Missing Authorization header."
-        raise AuthorizationRequiredError(msg)
+class BasicAuthBackend(AuthenticationBackend):
+    async def authenticate(self, conn):
+        if "Authorization" not in conn.headers:
+            msg = "Missing Authorization header."
+            raise AuthorizationRequiredError(msg)
 
-    if authorization.credentials != "permitted":
-        msg = "No active permissions."
-        raise PermissionRequiredError(msg)
+        auth = conn.headers["Authorization"]
+        scheme, credentials = auth.split()
+        if credentials != "permitted":
+            msg = "No active permissions."
+            raise PermissionRequiredError(msg)
 
-    return True
+        return AuthCredentials(["authenticated"]), SimpleUser("username")
 
 
-app = fastapi.FastAPI()
+async def authorized(request) -> dict:
+    return JSONResponse(content={"authorized": request.user.is_authenticated})
+
+
+app = starlette.applications.Starlette(
+    routes=[
+        Route("/authorized", authorized, methods=["GET"]),
+    ],
+    middleware=[Middleware(AuthenticationMiddleware, backend=BasicAuthBackend())],
+)
 
 add_exception_handler(
     app,
 )
-
-
-@app.get("/authorized")
-async def authorized(
-    authorized=fastapi.Depends(check_auth),
-) -> dict:
-    return {"authorized": authorized}

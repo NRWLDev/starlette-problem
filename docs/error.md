@@ -1,6 +1,6 @@
 # Errors
 
-The base `fastapi_problem.error.Problem` accepts a `title`, `details`, `status`
+The base `starlette_problem.error.Problem` accepts a `title`, `details`, `status`
 (default 500) and optional `**kwargs`. An additional `code` can be passed in,
 which will be used as the `type`, if not provided the `type` is derived from
 the class name.
@@ -27,14 +27,14 @@ field.
 Some convenience Problems are provided with predefined `status` attributes.
 To create custom errors subclasss these and define the `title` attribute.
 
-* `fastapi_problem.error.ServerProblem` provides status 500 errors
-* `fastapi_problem.error.RedirectProblem` provides status 301 errors
-* `fastapi_problem.error.BadRequestProblem` provides status 400 errors
-* `fastapi_problem.error.UnauthorisedProblem` provides status 401 errors
-* `fastapi_problem.error.ForbiddenProblem` provides status 403 errors
-* `fastapi_problem.error.NotFoundProblem` provides status 404 errors
-* `fastapi_problem.error.ConflictProblem` provides status 409 errors
-* `fastapi_problem.error.UnprocessableProblem` provides status 422 errors
+* `starlette_problem.error.ServerProblem` provides status 500 errors
+* `starlette_problem.error.RedirectProblem` provides status 301 errors
+* `starlette_problem.error.BadRequestProblem` provides status 400 errors
+* `starlette_problem.error.UnauthorisedProblem` provides status 401 errors
+* `starlette_problem.error.ForbiddenProblem` provides status 403 errors
+* `starlette_problem.error.NotFoundProblem` provides status 404 errors
+* `starlette_problem.error.ConflictProblem` provides status 409 errors
+* `starlette_problem.error.UnprocessableProblem` provides status 422 errors
 
 ## Custom Errors
 
@@ -42,7 +42,7 @@ Subclassing the convenience classes provide a simple way to consistently raise t
 with details/extras changing based on the raised context.
 
 ```python
-from fastapi_problem.error import NotFoundProblem
+from starlette_problem.error import NotFoundProblem
 
 
 class UserNotFoundError(NotFoundProblem):

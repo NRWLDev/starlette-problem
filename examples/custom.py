@@ -1,9 +1,6 @@
 """
 Run this example:
-$ fastapi dev examples/custom.py
-
-To see a custom 422, fastapi RequestValidationError response.
-$ curl http://localhost:8000/validation-error
+$ uvicorn examples.custom:app
 
 To see a custom unhandled server error response.
 $ curl http://localhost:8000/unexpected-error
@@ -17,10 +14,11 @@ $ curl http://localhost:8000/not-found
 
 import logging
 
-import fastapi
+import starlette.applications
+from starlette.routing import Route
 
-from fastapi_problem.handler import add_exception_handler
-from fastapi_problem.error import NotFoundProblem, ServerProblem, StatusProblem, UnprocessableProblem
+from starlette_problem.handler import add_exception_handler
+from starlette_problem.error import NotFoundProblem, ServerProblem, StatusProblem, UnprocessableProblem
 
 logging.getLogger("uvicorn.error").disabled = True
 
@@ -34,40 +32,33 @@ class CustomNotAllowed(StatusProblem):
     status = 405
 
 
-class CustomValidation(UnprocessableProblem):
-    title = "Validation failed."
-
-
 class CustomServer(ServerProblem):
     title = "Server failed."
 
 
-app = fastapi.FastAPI()
+async def method_not_allowed() -> dict:
+    return {}
+
+
+async def unexpected_error() -> dict:
+    return {"value": 1 / 0}
+
+
+app = starlette.applications.Starlette(
+    routes=[
+        Route("/not-allowed", method_not_allowed, methods=["POST"]),
+        Route("/unexpected-error", unexpected_error, methods=["GET"]),
+    ],
+)
 
 add_exception_handler(
     app,
     unhandled_wrappers={
         "404": CustomNotFound,
         "405": CustomNotAllowed,
-        "422": CustomValidation,
         "default": CustomServer,
     },
 )
-
-
-@app.get("/validation-error")
-async def validation_error(required: str) -> dict:
-    return {}
-
-
-@app.post("/not-allowed")
-async def method_not_allowed() -> dict:
-    return {}
-
-
-@app.get("/unexpected-error")
-async def unexpected_error() -> dict:
-    return {"value": 1 / 0}
 
 
 if __name__ == "__main__":

@@ -1,12 +1,12 @@
 # Usage
 
 ```python
-import fastapi
-import fastapi_problem.handler
+import starlette.applications
+import starlette_problem.handler
 
 
-app = fastapi.FastAPI()
-fastapi_problem.handler.add_exception_handler(app)
+app = starlette.applications.Starlette()
+starlette_problem.handler.add_exception_handler(app)
 ```
 
 A custom logger can be provided using:
@@ -18,7 +18,7 @@ add_exception_handler(
 )
 ```
 
-If you require cors headers, you can pass a `fastapi_problem.cors.CorsConfiguration`
+If you require cors headers, you can pass a `starlette_problem.cors.CorsConfiguration`
 instance to `add_exception_handler(cors=...)`.
 
 ```python
@@ -39,8 +39,8 @@ a `StatusProblem`, the system key `default` is also accepted as the root wrapper
 for all unhandled exceptions.
 
 ```python
-from fastapi_problem.error import StatusProblem
-from fastapi_problem.handler import add_exception_handler
+from starlette_problem.error import StatusProblem
+from starlette_problem.handler import add_exception_handler
 
 class NotFoundError(StatusProblem):
     status = 404
@@ -62,7 +62,7 @@ strip debug messaging from specific status codes. Allowing expected debug
 messages to reach the user, while suppressing unexpected server errors etc.
 
 ```python
-from fastapi_problem.handler import add_exception_handler
+from starlette_problem.handler import add_exception_handler
 
 add_exception_handler(
     app,
@@ -72,9 +72,9 @@ add_exception_handler(
 
 ## Sentry
 
-`fastapi_problem` is designed to play nicely with [Sentry](https://sentry.io),
+`starlette_problem` is designed to play nicely with [Sentry](https://sentry.io),
 there is no need to do anything special to integrate with sentry other than
-initializing the sdk. The Starlette and Fastapi integrations paired with the
+initializing the sdk. The Starlette integration paired with the
 Logging integration will take care of everything.
 
 To prevent duplicated entries, ignoing the `uvicorn.error` logger in sentry can

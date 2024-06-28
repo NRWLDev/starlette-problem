@@ -21,10 +21,10 @@ class CustomBaseError(Exception):
 A custom handler can then be defined in your application.
 
 ```python
-import fastapi
+import starlette.applications
 from rfc9457 import error_class_to_type
-from fastapi_problem.error import Problem
-from fastapi_problem.handler import ExceptionHandler, add_exception_handler
+from starlette_problem.error import Problem
+from starlette_problem.handler import ExceptionHandler, add_exception_handler
 from starlette.requests import Request
 
 from third_party.error import CustomBaseError
@@ -38,7 +38,7 @@ def my_custom_handler(eh: ExceptionHandler, request: Request, exc: CustomBaseErr
         headers={"x-custom-header": "value"},
     )
 
-app = fastapi.FastAPI()
+app = starlette.applications.Starlette()
 add_exception_handler(
     app,
     handlers={
@@ -59,10 +59,10 @@ can return None rather than a Problem. If a handler returns None the exception
 will be pass to the next defined handler.
 
 ```python
-import fastapi
+import starlette.applications
 from rfc9457 import error_class_to_type
-from fastapi_problem.error import Problem
-from fastapi_problem.handler import ExceptionHandler, add_exception_handler
+from starlette_problem.error import Problem
+from starlette_problem.handler import ExceptionHandler, add_exception_handler
 from starlette.requests import Request
 
 def no_response_handler(eh: ExceptionHandler, request: Request, exc: RuntimeError) -> Problem | None:
@@ -83,7 +83,7 @@ def base_handler(eh: ExceptionHandler, request: Request, exc: Exception) -> Prob
         status=500,
     )
 
-app = fastapi.FastAPI()
+app = starlette.applications.Starlette()
 add_exception_handler(
     app,
     handlers={

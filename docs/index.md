@@ -1,6 +1,6 @@
 # Overview
 
-`fastapi_problem` is a set of exception base classes and handlers for use in fastapi
+`starlette_problem` is a set of exception base classes and handlers for use in starlette
 applications to support easy error management and responses
 
 Each exception easily marshals to JSON based on the

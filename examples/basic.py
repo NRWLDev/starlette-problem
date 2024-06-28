@@ -1,6 +1,6 @@
 """
 Run this example:
-$ fastapi dev examples/basic.py
+$ uvicorn examples.basic:app
 
 To see a standard expected user error response.
 $ curl http://localhost:8000/user-error
@@ -11,10 +11,11 @@ $ curl http://localhost:8000/user-error
 
 import logging
 
-import fastapi
+import starlette.applications
+from starlette.routing import Route
 
-from fastapi_problem.error import BadRequestProblem, ServerProblem
-from fastapi_problem.handler import add_exception_handler
+from starlette_problem.error import BadRequestProblem, ServerProblem
+from starlette_problem.handler import add_exception_handler
 
 logging.getLogger("uvicorn.error").disabled = True
 
@@ -27,21 +28,24 @@ class KnownServerProblem(ServerProblem):
     title = "Something you can't do anything about happened."
 
 
-app = fastapi.FastAPI()
+async def user_error(request) -> dict:
+    raise KnownProblem("A known user error use case occurred.")
+
+
+async def server_error(request) -> dict:
+    raise KnownServerProblem("A known server error use case occurred.")
+
+
+app = starlette.applications.Starlette(
+    routes=[
+        Route("/user-error", user_error, methods=["GET"]),
+        Route("/server-error", server_error, methods=["GET"]),
+    ],
+)
 
 add_exception_handler(
     app,
 )
-
-
-@app.get("/user-error")
-async def user_error() -> dict:
-    raise KnownProblem("A known user error use case occurred.")
-
-
-@app.get("/server-error")
-async def server_error() -> dict:
-    raise KnownServerProblem("A known server error use case occurred.")
 
 
 if __name__ == "__main__":

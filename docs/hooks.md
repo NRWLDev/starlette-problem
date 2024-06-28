@@ -11,8 +11,8 @@ for informational purposes such as logging or debugging.
 ```python
 import logging
 
-import fastapi
-from fastapi_problem.handler import add_exception_handler
+import starlette.applications
+from starlette_problem.handler import add_exception_handler
 from starlette.requests import Request
 
 logger = logging.getLogger(__name__)
@@ -23,7 +23,7 @@ def custom_hook(request: Request, exc: Exception) -> None:
     logger.debug(request.headers)
 
 
-app = fastapi.FastAPI()
+app = starlette.applications.Starlette()
 add_exception_handler(
     app,
     pre_hooks=[custom_hook],
@@ -38,8 +38,8 @@ additional headers etc. The CORS header implementation is done using a post
 hook.
 
 ```python
-import fastapi
-from fastapi_problem.handler import add_exception_handler
+import starlette.applications
+from starlette_problem.handler import add_exception_handler
 from starlette.requests import Request
 
 logger = logging.getLogger(__name__)
@@ -52,7 +52,7 @@ def custom_hook(request: Request, response: JSONResponse) -> JSONResponse:
     return response
 
 
-app = fastapi.FastAPI()
+app = starlette.applications.Starlette()
 add_exception_handler(
     app,
     post_hooks=[custom_hook],

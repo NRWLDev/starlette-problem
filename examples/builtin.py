@@ -1,12 +1,6 @@
 """
 Run this example:
-$ fastapi dev examples/builtin.py
-
-To see a standard 422, fastapi RequestValidationError response.
-$ curl http://localhost:8000/validation-error
-
-To see a standard 422, fastapi RequestValidationError form validation response.
-$ curl http://localhost:8000/validation-error -X POST -H "Content-Type: application/json" --data '{"other": [{"inner_required": "provided"}, {}]}'
+$ uvicorn examples.builtin:app
 
 To see a standard unhandled server error response.
 $ curl http://localhost:8000/unexpected-error
@@ -20,49 +14,32 @@ $ curl http://localhost:8000/not-found
 
 import logging
 
-import fastapi
-import pydantic
+import starlette.applications
+from starlette.routing import Route
 
-from fastapi_problem.handler import add_exception_handler
+from starlette_problem.handler import add_exception_handler
 
 logging.getLogger("uvicorn.error").disabled = True
 
-app = fastapi.FastAPI()
+
+async def method_not_allowed(request) -> dict:
+    return {}
+
+
+async def unexpected_error(request) -> dict:
+    return {"value": 1 / 0}
+
+
+app = starlette.applications.Starlette(
+    routes=[
+        Route("/not-allowed", method_not_allowed, methods=["POST"]),
+        Route("/unexpected-error", unexpected_error, methods=["GET"]),
+    ],
+)
 
 add_exception_handler(
     app,
 )
-
-
-@app.get("/validation-error")
-async def validation_error(required: str) -> dict:
-    return {}
-
-
-class Other(pydantic.BaseModel):
-    inner_required: str
-
-
-class NestedBody(pydantic.BaseModel):
-    required: str
-    other: list[Other]
-
-
-@app.post("/validation-error")
-async def validation_error(
-    data: NestedBody,
-) -> dict:
-    return {}
-
-
-@app.post("/not-allowed")
-async def method_not_allowed() -> dict:
-    return {}
-
-
-@app.get("/unexpected-error")
-async def unexpected_error() -> dict:
-    return {"value": 1 / 0}
 
 
 if __name__ == "__main__":

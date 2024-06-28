@@ -1,8 +1,8 @@
 # yaml-language-server: $schema=https://squidfunk.github.io/mkdocs-material/schema.json
-site_name: FastAPI Problem
-site_url: https://nrwldev.github.io/fastapi-problem/
-repo_name: fastapi-problem
-repo_url: https://github.com/NRWLDev/fastapi-problem
+site_name: Starlette Problem
+site_url: https://nrwldev.github.io/starlette-problem/
+repo_name: starlette-problem
+repo_url: https://github.com/NRWLDev/starlette-problem
 nav:
   - index.md
   - usage.md
