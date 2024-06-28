@@ -1,6 +1,6 @@
 import pytest
 
-from fastapi_problem import error
+from starlette_problem import error
 
 
 class NotFoundError(error.NotFoundProblem):

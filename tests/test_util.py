@@ -1,6 +1,6 @@
 import pytest
 
-from fastapi_problem import util
+from starlette_problem import util
 
 
 @pytest.mark.parametrize(
