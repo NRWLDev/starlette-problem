@@ -1,5 +1,13 @@
 # Changelog
 
+## v0.9.0 - 2024-06-28
+
+### Features and Improvements
+
+- **Breaking:** Rework fastapi problem to support starlette. [[1ca3264](https://github.com/NRWLDev/starlette-problem/commit/1ca32642a3e119c9747925373fd940cbcd8612de)]
+
+### Miscellaneous
+
 ## v0.8.0 - 2024-06-14
 
 ### Features and Improvements
