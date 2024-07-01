@@ -1,5 +1,11 @@
 # Changelog
 
+## v0.9.1 - 2024-07-01
+
+### Features and Improvements
+
+- Pass content to post hooks to support response mutation. [[#1](https://github.com/NRWLDev/starlette-problem/issues/1)] [[372dab6](https://github.com/NRWLDev/starlette-problem/commit/372dab612e2a08d92e465d536e6deadd7c4b3a50)]
+
 ## v0.9.0 - 2024-06-28
 
 ### Features and Improvements
