@@ -7,7 +7,7 @@ import rfc9457
 from starlette.exceptions import HTTPException
 from starlette.middleware.cors import CORSMiddleware
 from starlette.requests import Request
-from starlette.responses import JSONResponse
+from starlette.responses import JSONResponse, Response
 
 from starlette_problem.error import Problem, StatusProblem
 from starlette_problem.util import convert_status_code
@@ -20,9 +20,9 @@ if t.TYPE_CHECKING:
     from starlette_problem.cors import CorsConfiguration
 
 
-Handler = t.Callable[["ExceptionHandler", Request, Exception], t.Optional[Problem]]  # pragma: no mutate
-PreHook = t.Callable[[Request, Exception], None]  # pragma: no mutate
-PostHook = t.Callable[[Request, JSONResponse], JSONResponse]  # pragma: no mutate
+Handler = t.Callable[["ExceptionHandler", Request, Exception], t.Optional[Problem]]
+PreHook = t.Callable[[Request, Exception], None]
+PostHook = t.Callable[[dict, Request, Response], Response]
 
 
 def http_exception_handler(eh: ExceptionHandler, _request: Request, exc: HTTPException) -> Problem:
@@ -64,7 +64,7 @@ class ExceptionHandler:
         self.strip_debug = strip_debug
         self.strip_debug_codes = strip_debug_codes or []
 
-    def __call__(self: t.Self, request: Request, exc: Exception) -> JSONResponse:
+    def __call__(self: t.Self, request: Request, exc: Exception) -> Response:
         for pre_hook in self.pre_hooks:
             pre_hook(request, exc)
 
@@ -108,14 +108,15 @@ class ExceptionHandler:
         headers = {"content-type": "application/problem+json"}
         headers.update(ret.headers or {})
 
+        content = ret.marshal(type_base_url=self.documentation_base_url, strip_debug=strip_debug_)
         response = JSONResponse(
             status_code=ret.status,
-            content=ret.marshal(type_base_url=self.documentation_base_url, strip_debug=strip_debug_),
+            content=content,
             headers=headers,
         )
 
         for post_hook in self.post_hooks:
-            response = post_hook(request, response)
+            response = post_hook(content, request, response)
 
         return response
 
@@ -124,7 +125,7 @@ class CorsPostHook:
     def __init__(self: t.Self, config: CorsConfiguration) -> None:
         self.config = config
 
-    def __call__(self: t.Self, request: Request, response: JSONResponse) -> JSONResponse:
+    def __call__(self: t.Self, _content: dict, request: Request, response: JSONResponse) -> JSONResponse:
         # Since the CORSMiddleware is not executed when an unhandled server exception
         # occurs, we need to manually set the CORS headers ourselves if we want the FE
         # to receive a proper JSON 500, opposed to a CORS error.
@@ -188,7 +189,8 @@ def generate_handler(  # noqa: PLR0913
     post_hooks = post_hooks or []
 
     if cors:
-        post_hooks.append(CorsPostHook(cors))
+        # Ensure runs before custom modifications
+        post_hooks.insert(0, CorsPostHook(cors))
 
     return ExceptionHandler(
         logger=logger,
