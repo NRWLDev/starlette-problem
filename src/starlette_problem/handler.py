@@ -64,7 +64,7 @@ class ExceptionHandler:
         self.strip_debug = strip_debug
         self.strip_debug_codes = strip_debug_codes or []
 
-    def __call__(self: t.Self, request: Request, exc: Exception) -> JSONResponse:
+    def __call__(self: t.Self, request: Request, exc: Exception) -> Response:
         for pre_hook in self.pre_hooks:
             pre_hook(request, exc)
 
