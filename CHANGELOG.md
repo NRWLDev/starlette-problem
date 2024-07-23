@@ -1,5 +1,11 @@
 # Changelog
 
+## v0.10.0 - 2024-07-23
+
+### Miscellaneous
+
+- **Breaking:** Update rfc9457 with fix for correct response format per spec. [[b1540d7](https://github.com/NRWLDev/starlette-problem/commit/b1540d73bb1f311cf6389b691765f79afa7b7ead)]
+
 ## v0.9.1 - 2024-07-01
 
 ### Features and Improvements
