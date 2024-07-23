@@ -53,7 +53,7 @@ class TestExceptionHandler:
         assert response.status_code == http.HTTPStatus.INTERNAL_SERVER_ERROR
         assert json.loads(response.body) == {
             "title": "Unhandled exception occurred.",
-            "details": "Something went bad",
+            "detail": "Something went bad",
             "type": "custom-unhandled-exception",
             "status": 500,
         }
@@ -79,7 +79,7 @@ class TestExceptionHandler:
             "title": "Unhandled exception occurred.",
             "type": "https://docs/errors/custom-unhandled-exception",
             "status": 500,
-            "details": "Something went bad",
+            "detail": "Something went bad",
         }
 
     def test_strip_debug(self):
@@ -124,7 +124,7 @@ class TestExceptionHandler:
         }
         assert logger.debug.call_args_list == [
             mock.call("Stripping debug information from exception."),
-            mock.call("Removed details: Something went bad"),
+            mock.call("Removed detail: Something went bad"),
         ]
 
     def test_strip_debug_with_allowed_code(self):
@@ -144,7 +144,7 @@ class TestExceptionHandler:
         assert json.loads(response.body) == {
             "title": "This is an error.",
             "type": "something-wrong",
-            "details": "something bad",
+            "detail": "something bad",
             "status": 500,
         }
 
@@ -160,7 +160,7 @@ class TestExceptionHandler:
         assert response.status_code == http.HTTPStatus.INTERNAL_SERVER_ERROR
         assert json.loads(response.body) == {
             "title": "Unhandled exception occurred.",
-            "details": "Something went bad",
+            "detail": "Something went bad",
             "type": "unhandled-exception",
             "status": 500,
         }
@@ -177,7 +177,7 @@ class TestExceptionHandler:
             return error.Problem(
                 title="Handled",
                 type_="handled-error",
-                details=str(exc),
+                detail=str(exc),
                 status=500,
                 headers=None,
             )
@@ -191,7 +191,7 @@ class TestExceptionHandler:
         assert response.status_code == http.HTTPStatus.INTERNAL_SERVER_ERROR
         assert json.loads(response.body) == {
             "title": "Handled",
-            "details": "Something went bad",
+            "detail": "Something went bad",
             "type": "handled-error",
             "status": 500,
         }
@@ -201,7 +201,7 @@ class TestExceptionHandler:
             return error.Problem(
                 title="Handled",
                 type_="handled-error",
-                details=str(exc),
+                detail=str(exc),
                 status=400,
                 headers=None,
             )
@@ -210,7 +210,7 @@ class TestExceptionHandler:
             return error.Problem(
                 title="Handled",
                 type_="handled-error",
-                details=str(exc),
+                detail=str(exc),
                 status=500,
                 headers=None,
             )
@@ -224,7 +224,7 @@ class TestExceptionHandler:
         assert response.status_code == http.HTTPStatus.BAD_REQUEST
         assert json.loads(response.body) == {
             "title": "Handled",
-            "details": "Something went bad",
+            "detail": "Something went bad",
             "type": "handled-error",
             "status": 400,
         }
@@ -242,7 +242,7 @@ class TestExceptionHandler:
         assert response.headers["content-type"] == "application/problem+json"
         assert json.loads(response.body) == {
             "title": "Unhandled exception occurred.",
-            "details": "Something went bad",
+            "detail": "Something went bad",
             "type": "unhandled-exception",
             "status": 500,
         }
@@ -261,7 +261,7 @@ class TestExceptionHandler:
         assert response.status_code == http.HTTPStatus.NOT_FOUND
         assert json.loads(response.body) == {
             "title": "Not Found",
-            "details": "Not Found",
+            "detail": "Not Found",
             "type": "http-not-found",
             "status": 404,
         }
@@ -281,7 +281,7 @@ class TestExceptionHandler:
         assert response.status_code == http.HTTPStatus.INTERNAL_SERVER_ERROR
         assert json.loads(response.body) == {
             "title": "This is an error.",
-            "details": "Not Found",
+            "detail": "Not Found",
             "type": "something-wrong",
             "status": 500,
         }
@@ -296,7 +296,7 @@ class TestExceptionHandler:
         assert response.status_code == http.HTTPStatus.INTERNAL_SERVER_ERROR
         assert json.loads(response.body) == {
             "title": "This is an error.",
-            "details": "something bad",
+            "detail": "something bad",
             "type": "something-wrong",
             "status": 500,
         }
@@ -396,7 +396,7 @@ async def test_exception_handler_in_app():
     assert r.json() == {
         "type": "http-not-found",
         "title": "Not Found",
-        "details": "Not Found",
+        "detail": "Not Found",
         "status": 404,
     }
     assert m.call.call_args == mock.call("pre-hook")
@@ -420,6 +420,6 @@ async def test_exception_handler_in_app_post_register():
     assert r.json() == {
         "type": "http-not-found",
         "title": "Not Found",
-        "details": "Not Found",
+        "detail": "Not Found",
         "status": 404,
     }

@@ -28,14 +28,14 @@ PostHook = t.Callable[[dict, Request, Response], Response]
 def http_exception_handler(eh: ExceptionHandler, _request: Request, exc: HTTPException) -> Problem:
     wrapper = eh.unhandled_wrappers.get(str(exc.status_code))
     title, type_ = convert_status_code(exc.status_code)
-    details = exc.detail
+    detail = exc.detail
     return (
-        wrapper(details, headers=exc.headers)
+        wrapper(detail, headers=exc.headers)
         if wrapper
         else Problem(
             title=title,
             type_=type_,
-            details=details,
+            detail=detail,
             status=exc.status_code,
             headers=exc.headers,
         )
@@ -74,7 +74,7 @@ class ExceptionHandler:
             if wrapper
             else Problem(
                 title="Unhandled exception occurred.",
-                details=str(exc),
+                detail=str(exc),
                 type_="unhandled-exception",
             )
         )
@@ -94,12 +94,12 @@ class ExceptionHandler:
 
         strip_debug_ = self.strip_debug or ret.status in self.strip_debug_codes
 
-        if strip_debug_ and (ret.details or ret.extras) and self.logger:
+        if strip_debug_ and (ret.detail or ret.extras) and self.logger:
             msg = "Stripping debug information from exception."
             self.logger.debug(msg)
 
             for k, v in {
-                "details": ret.details,
+                "detail": ret.detail,
                 **ret.extras,
             }.items():
                 msg = f"Removed {k}: {v}"
