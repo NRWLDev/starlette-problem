@@ -1,5 +1,11 @@
 # Changelog
 
+## v0.10.2 - 2024-08-29
+
+### Bug fixes
+
+- Pin rfc9457 correctly [[64ae57c](https://github.com/NRWLDev/starlette-problem/commit/64ae57cd818e944ecd5788fe0df572620e8ee65a)]
+
 ## v0.10.1 - 2024-08-29
 
 ### Bug fixes
