@@ -1,5 +1,11 @@
 # Changelog
 
+## v0.10.3 - 2024-08-29
+
+### Miscellaneous
+
+- Rename documentation_base_uri to documentation_uri_template [[186b3c6](https://github.com/NRWLDev/starlette-problem/commit/186b3c683a241f8e7a3ccf2f6b2bca7edf10f2b2)]
+
 ## v0.10.2 - 2024-08-29
 
 ### Bug fixes
