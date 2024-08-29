@@ -52,7 +52,7 @@ class ExceptionHandler:
         pre_hooks: list[PreHook] | None = None,
         post_hooks: list[PostHook] | None = None,
         documentation_base_url: str | None = None,
-        documentation_base_uri: str = "",
+        documentation_uri_template: str = "",
         *,
         strip_debug: bool = False,
         strip_debug_codes: list[int] | None = None,
@@ -64,13 +64,13 @@ class ExceptionHandler:
         self.pre_hooks = pre_hooks or []
         self.post_hooks = post_hooks or []
         self.documentation_base_url = documentation_base_url
-        self.documentation_base_uri = documentation_base_uri
+        self.documentation_uri_template = documentation_uri_template
         self.strip_debug = strip_debug
         self.strip_debug_codes = strip_debug_codes or []
         self.strict = strict_rfc9457
         if documentation_base_url:
             warn(
-                "Using deprecated parameter 'documentation_base_url', switch to 'documentation_base_uri'",
+                "Using deprecated parameter 'documentation_base_url', switch to 'documentation_uri_template'",
                 FutureWarning,
                 stacklevel=2,
             )
@@ -121,7 +121,7 @@ class ExceptionHandler:
 
         content = ret.marshal(
             type_base_url=self.documentation_base_url,
-            uri=self.documentation_base_uri,
+            uri=self.documentation_uri_template,
             strip_debug=strip_debug_,
             strict=self.strict,
         )
@@ -191,7 +191,7 @@ def generate_handler(  # noqa: PLR0913
     pre_hooks: list[PreHook] | None = None,
     post_hooks: list[PostHook] | None = None,
     documentation_base_url: str | None = None,
-    documentation_base_uri: str = "",
+    documentation_uri_template: str = "",
     *,
     strip_debug: bool = False,
     strip_debug_codes: list[int] | None = None,
@@ -217,7 +217,7 @@ def generate_handler(  # noqa: PLR0913
         pre_hooks=pre_hooks,
         post_hooks=post_hooks,
         documentation_base_url=documentation_base_url,
-        documentation_base_uri=documentation_base_uri,
+        documentation_uri_template=documentation_uri_template,
         strip_debug=strip_debug,
         strip_debug_codes=strip_debug_codes,
         strict_rfc9457=strict_rfc9457,
@@ -233,7 +233,7 @@ def add_exception_handler(  # noqa: PLR0913
     pre_hooks: list[PreHook] | None = None,
     post_hooks: list[PostHook] | None = None,
     documentation_base_url: str | None = None,
-    documentation_base_uri: str = "",
+    documentation_uri_template: str = "",
     *,
     strip_debug: bool = False,
     strip_debug_codes: list[int] | None = None,
@@ -247,7 +247,7 @@ def add_exception_handler(  # noqa: PLR0913
         pre_hooks,
         post_hooks,
         documentation_base_url,
-        documentation_base_uri,
+        documentation_uri_template,
         strip_debug=strip_debug,
         strip_debug_codes=strip_debug_codes,
         strict_rfc9457=strict_rfc9457,

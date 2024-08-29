@@ -82,7 +82,7 @@ class TestExceptionHandler:
             "detail": "Something went bad",
         }
 
-    def test_documentation_base_uri(self):
+    def test_documentation_uri_template(self):
         request = mock.Mock()
         exc = Exception("Something went bad")
 
@@ -90,7 +90,7 @@ class TestExceptionHandler:
             unhandled_wrappers={
                 "default": CustomUnhandledException,
             },
-            documentation_base_uri="https://docs/errors/{type}",
+            documentation_uri_template="https://docs/errors/{type}",
         )
         response = eh(request, exc)
 
@@ -110,7 +110,7 @@ class TestExceptionHandler:
             unhandled_wrappers={
                 "default": CustomUnhandledException,
             },
-            documentation_base_uri="https://docs/errors/{type}",
+            documentation_uri_template="https://docs/errors/{type}",
             strict_rfc9457=True,
         )
         response = eh(request, exc)
