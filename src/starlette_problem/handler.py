@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import http
 import typing as t
+from warnings import warn
 
 import rfc9457
 from starlette.exceptions import HTTPException
@@ -51,9 +52,11 @@ class ExceptionHandler:
         pre_hooks: list[PreHook] | None = None,
         post_hooks: list[PostHook] | None = None,
         documentation_base_url: str | None = None,
+        documentation_base_uri: str = "",
         *,
         strip_debug: bool = False,
         strip_debug_codes: list[int] | None = None,
+        strict_rfc9457: bool = False,
     ) -> None:
         self.logger = logger
         self.unhandled_wrappers = unhandled_wrappers or {}
@@ -61,8 +64,16 @@ class ExceptionHandler:
         self.pre_hooks = pre_hooks or []
         self.post_hooks = post_hooks or []
         self.documentation_base_url = documentation_base_url
+        self.documentation_base_uri = documentation_base_uri
         self.strip_debug = strip_debug
         self.strip_debug_codes = strip_debug_codes or []
+        self.strict = strict_rfc9457
+        if documentation_base_url:
+            warn(
+                "Using deprecated parameter 'documentation_base_url', switch to 'documentation_base_uri'",
+                FutureWarning,
+                stacklevel=2,
+            )
 
     def __call__(self: t.Self, request: Request, exc: Exception) -> Response:
         for pre_hook in self.pre_hooks:
@@ -108,7 +119,12 @@ class ExceptionHandler:
         headers = {"content-type": "application/problem+json"}
         headers.update(ret.headers or {})
 
-        content = ret.marshal(type_base_url=self.documentation_base_url, strip_debug=strip_debug_)
+        content = ret.marshal(
+            type_base_url=self.documentation_base_url,
+            uri=self.documentation_base_uri,
+            strip_debug=strip_debug_,
+            strict=self.strict,
+        )
         response = JSONResponse(
             status_code=ret.status,
             content=content,
@@ -175,9 +191,11 @@ def generate_handler(  # noqa: PLR0913
     pre_hooks: list[PreHook] | None = None,
     post_hooks: list[PostHook] | None = None,
     documentation_base_url: str | None = None,
+    documentation_base_uri: str = "",
     *,
     strip_debug: bool = False,
     strip_debug_codes: list[int] | None = None,
+    strict_rfc9457: bool = False,
 ) -> t.Callable:
     handlers = handlers or {}
     handlers.update(
@@ -199,8 +217,10 @@ def generate_handler(  # noqa: PLR0913
         pre_hooks=pre_hooks,
         post_hooks=post_hooks,
         documentation_base_url=documentation_base_url,
+        documentation_base_uri=documentation_base_uri,
         strip_debug=strip_debug,
         strip_debug_codes=strip_debug_codes,
+        strict_rfc9457=strict_rfc9457,
     )
 
 
@@ -213,9 +233,11 @@ def add_exception_handler(  # noqa: PLR0913
     pre_hooks: list[PreHook] | None = None,
     post_hooks: list[PostHook] | None = None,
     documentation_base_url: str | None = None,
+    documentation_base_uri: str = "",
     *,
     strip_debug: bool = False,
     strip_debug_codes: list[int] | None = None,
+    strict_rfc9457: bool = False,
 ) -> None:
     eh = generate_handler(
         logger,
@@ -225,8 +247,10 @@ def add_exception_handler(  # noqa: PLR0913
         pre_hooks,
         post_hooks,
         documentation_base_url,
+        documentation_base_uri,
         strip_debug=strip_debug,
         strip_debug_codes=strip_debug_codes,
+        strict_rfc9457=strict_rfc9457,
     )
 
     app.add_exception_handler(Exception, eh)
