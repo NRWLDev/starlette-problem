@@ -1,5 +1,11 @@
 # Changelog
 
+## v0.10.1 - 2024-08-29
+
+### Bug fixes
+
+- Update rfc9457 library and document strict mode and new uri support. [[1c654aa](https://github.com/NRWLDev/starlette-problem/commit/1c654aa42e51e9779aa8f3a93fdc3aa1d5913973)]
+
 ## v0.10.0 - 2024-07-23
 
 ### Miscellaneous
