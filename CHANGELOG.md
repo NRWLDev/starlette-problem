@@ -1,5 +1,11 @@
 # Changelog
 
+## v0.10.4 - 2024-08-30
+
+### Bug fixes
+
+- Deprecate usage of type_base_url in rfc9457 behind the scenes [[bb2876c](https://github.com/NRWLDev/starlette-problem/commit/bb2876c364bd5958bd62ace9dd4bc98753d7122b)]
+
 ## v0.10.3 - 2024-08-29
 
 ### Miscellaneous
