@@ -63,8 +63,9 @@ class ExceptionHandler:
         self.handlers = handlers or {}
         self.pre_hooks = pre_hooks or []
         self.post_hooks = post_hooks or []
-        self.documentation_base_url = documentation_base_url
         self.documentation_uri_template = documentation_uri_template
+        if not documentation_uri_template and documentation_base_url:
+            self.documentation_uri_template = f"{documentation_base_url.rstrip('/')}/{{type}}"
         self.strip_debug = strip_debug
         self.strip_debug_codes = strip_debug_codes or []
         self.strict = strict_rfc9457
@@ -120,7 +121,6 @@ class ExceptionHandler:
         headers.update(ret.headers or {})
 
         content = ret.marshal(
-            type_base_url=self.documentation_base_url,
             uri=self.documentation_uri_template,
             strip_debug=strip_debug_,
             strict=self.strict,
