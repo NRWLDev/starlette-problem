@@ -19,7 +19,6 @@ classifiers = [
     "Operating System :: OS Independent",
     "Topic :: Internet",
     "Topic :: Utilities",
-    "Topic :: Framework :: Starlette",
     "Programming Language :: Python",
     "Programming Language :: Python :: 3 :: Only",
     "Programming Language :: Python :: 3.8",
