@@ -24,7 +24,7 @@ class CustomValidationError(error.StatusProblem):
     title = "Request validation error."
 
 
-@pytest.fixture()
+@pytest.fixture
 def cors():
     return CorsConfiguration(
         allow_origins=["*"],
