@@ -1,5 +1,11 @@
 # Changelog
 
+## v0.10.6 - 2024-09-09
+
+### Bug fixes
+
+- Remove unknown classifier from metadata [[ddb0ecc](https://github.com/NRWLDev/starlette-problem/commit/ddb0eccf535acb50c65302cf40ffca37f263ade4)]
+
 ## v0.10.5 - 2024-09-09
 
 ### Miscellaneous
