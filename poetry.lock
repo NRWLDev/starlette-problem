@@ -746,17 +746,20 @@ files = [
 
 [[package]]
 name = "rfc9457"
-version = "0.1.1"
+version = "0.2.2"
 description = "Implementation of RFC9457 problems."
 optional = false
-python-versions = "<4.0,>=3.9"
+python-versions = ">=3.9"
 files = [
-    {file = "rfc9457-0.1.1-py3-none-any.whl", hash = "sha256:6556c4366f68f55dd7727c5c2f6ae3b05c84230a5ccc26f608b3c690bd658945"},
-    {file = "rfc9457-0.1.1.tar.gz", hash = "sha256:5b9d036128694f586f3b57992189af602f79d822944265f6f8e6596e6d529aa7"},
+    {file = "rfc9457-0.2.2-py3-none-any.whl", hash = "sha256:488e745142bbc62320e0e9a4ec6bac9ac48e95398446b9d84d655b3a67af65fe"},
+    {file = "rfc9457-0.2.2.tar.gz", hash = "sha256:e62438b455adf80c28a924c281e96d954dd700e1e80be78db7db31acf5064d05"},
 ]
 
 [package.dependencies]
-multidict = "*"
+multidict = "6.0.5"
+
+[package.extras]
+dev = ["changelog-gen (>=0.12.0)", "pre-commit (>=3.7.1)", "pytest (>=7.4.4)", "pytest-cov (>=4.1.0)", "pytest-random-order (>=1.1.1)", "ruff (>=0.6.4)"]
 
 [[package]]
 name = "rtoml"
