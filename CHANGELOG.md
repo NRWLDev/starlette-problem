@@ -1,5 +1,12 @@
 # Changelog
 
+## v0.10.5 - 2024-09-09
+
+### Miscellaneous
+
+- Migrate from poetry to uv for dependency and build management [[3995763](https://github.com/NRWLDev/starlette-problem/commit/399576359c8be1d7d4cdf892dfd676a4d86dedfd)]
+- Update changelog-gen and related configuration. [[6b31a1a](https://github.com/NRWLDev/starlette-problem/commit/6b31a1aac3cdf634dd65322815a728eca26495dc)]
+
 ## v0.10.4 - 2024-08-30
 
 ### Bug fixes
