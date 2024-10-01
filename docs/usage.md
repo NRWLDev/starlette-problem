@@ -64,7 +64,7 @@ allow extras for specific status codes. Allowing expected fields to reach the
 user, while suppressing unexpected server errors etc.
 
 ```python
-from starlette_problem.handler import add_exception_handler
+from starlette_problem.handler import StripExtrasPostHook, add_exception_handler
 
 add_exception_handler(
     app,
