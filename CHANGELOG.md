@@ -1,5 +1,11 @@
 # Changelog
 
+## v0.10.8 - 2024-10-01
+
+### Bug fixes
+
+- Stop deprecation warnings when flag is not explicitly set. [[6e79e5e](https://github.com/NRWLDev/starlette-problem/commit/6e79e5ebfa28e98b364cf5756d2d80c0f59b8145)]
+
 ## v0.10.7 - 2024-10-01
 
 ### Features and Improvements
