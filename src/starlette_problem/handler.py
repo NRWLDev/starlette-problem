@@ -85,7 +85,7 @@ class ExceptionHandler:
                 stacklevel=2,
             )
 
-    def __call__(self: t.Self, request: Request, exc: Exception) -> Response:
+    def __call__(self: t.Self, request: Request, exc: Exception) -> Response:  # noqa: C901
         for pre_hook in self.pre_hooks:
             pre_hook(request, exc)
 
@@ -141,7 +141,16 @@ class ExceptionHandler:
         )
 
         for post_hook in self.post_hooks:
-            content, response = post_hook(content, request, response)
+            result = post_hook(content, request, response)
+            if isinstance(result, Response):
+                response = result
+                warn(
+                    "PostHook returning deprecated format `return response`, use `return (content, response)`.",
+                    FutureWarning,
+                    stacklevel=2,
+                )
+            else:
+                content, response = result
 
         return response
 
@@ -150,7 +159,7 @@ class CorsPostHook:
     def __init__(self: t.Self, config: CorsConfiguration) -> None:
         self.config = config
 
-    def __call__(self: t.Self, content: dict, request: Request, response: JSONResponse) -> JSONResponse:
+    def __call__(self: t.Self, _content: dict, request: Request, response: Response) -> Response:
         # Since the CORSMiddleware is not executed when an unhandled server exception
         # occurs, we need to manually set the CORS headers ourselves if we want the FE
         # to receive a proper JSON 500, opposed to a CORS error.
@@ -189,7 +198,7 @@ class CorsPostHook:
                 response.headers["Access-Control-Allow-Origin"] = origin
                 response.headers.add_vary_header("Origin")
 
-        return content, response
+        return response
 
 
 class StripExtrasPostHook:
