@@ -73,7 +73,7 @@ class ExceptionHandler:
 
         if strip_debug is not None or strip_debug_codes is not None:
             warn(
-                "Using deprecated parameter 'strip_debug' or `strip_debug_codes`, switch to 'StripExtras' post hook.",
+                "Using deprecated parameter 'strip_debug' or `strip_debug_codes`, switch to 'StripExtrasPostHook'.",
                 FutureWarning,
                 stacklevel=2,
             )
@@ -192,7 +192,7 @@ class CorsPostHook:
         return content, response
 
 
-class StripExtras:
+class StripExtrasPostHook:
     def __init__(
         self: t.Self,
         logger: logging.Logger | None = None,

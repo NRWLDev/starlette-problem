@@ -127,7 +127,7 @@ class TestExceptionHandler:
         request = mock.Mock(headers={})
         exc = SomethingWrongError("something bad", a="b")
 
-        eh = handler.generate_handler(post_hooks=[handler.StripExtras()])
+        eh = handler.generate_handler(post_hooks=[handler.StripExtrasPostHook()])
         response = eh(request, exc)
 
         assert (
@@ -139,7 +139,7 @@ class TestExceptionHandler:
         request = mock.Mock(headers={})
         exc = SomethingWrongError("something bad", a="b")
 
-        eh = handler.generate_handler(post_hooks=[handler.StripExtras(enabled=True)])
+        eh = handler.generate_handler(post_hooks=[handler.StripExtrasPostHook(enabled=True)])
         response = eh(request, exc)
 
         assert (
@@ -151,7 +151,9 @@ class TestExceptionHandler:
         request = mock.Mock(headers={})
         exc = SomethingWrongError("something bad", a="b")
 
-        eh = handler.generate_handler(post_hooks=[handler.StripExtras(exclude_status_codes=[500], enabled=True)])
+        eh = handler.generate_handler(
+            post_hooks=[handler.StripExtrasPostHook(exclude_status_codes=[500], enabled=True)],
+        )
         response = eh(request, exc)
 
         assert (
@@ -164,7 +166,7 @@ class TestExceptionHandler:
         exc = SomethingWrongError("something bad", a="b")
 
         eh = handler.generate_handler(
-            post_hooks=[handler.StripExtras(mandatory_fields=["type", "title", "status", "a"], enabled=True)],
+            post_hooks=[handler.StripExtrasPostHook(mandatory_fields=["type", "title", "status", "a"], enabled=True)],
         )
         response = eh(request, exc)
 
