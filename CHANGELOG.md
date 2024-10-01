@@ -1,5 +1,11 @@
 # Changelog
 
+## v0.10.7 - 2024-10-01
+
+### Features and Improvements
+
+- Deprecate support for strip_debug_* parameters. Introduce StripExtrasPostHook. [[d38c411](https://github.com/NRWLDev/starlette-problem/commit/d38c411f4618c265cfcde886e25a4427a6409c0b)]
+
 ## v0.10.6 - 2024-09-09
 
 ### Bug fixes
