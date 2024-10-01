@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import http
+import json
 import typing as t
 from warnings import warn
 
@@ -23,7 +24,7 @@ if t.TYPE_CHECKING:
 
 Handler = t.Callable[["ExceptionHandler", Request, Exception], t.Optional[Problem]]
 PreHook = t.Callable[[Request, Exception], None]
-PostHook = t.Callable[[dict, Request, Response], Response]
+PostHook = t.Callable[[dict, Request, Response], tuple[dict, Response]]
 
 
 def http_exception_handler(eh: ExceptionHandler, _request: Request, exc: HTTPException) -> Problem:
@@ -54,7 +55,7 @@ class ExceptionHandler:
         documentation_base_url: str | None = None,
         documentation_uri_template: str = "",
         *,
-        strip_debug: bool = False,
+        strip_debug: bool | None = None,
         strip_debug_codes: list[int] | None = None,
         strict_rfc9457: bool = False,
     ) -> None:
@@ -69,6 +70,14 @@ class ExceptionHandler:
         self.strip_debug = strip_debug
         self.strip_debug_codes = strip_debug_codes or []
         self.strict = strict_rfc9457
+
+        if strip_debug is not None or strip_debug_codes is not None:
+            warn(
+                "Using deprecated parameter 'strip_debug' or `strip_debug_codes`, switch to 'StripExtras' post hook.",
+                FutureWarning,
+                stacklevel=2,
+            )
+
         if documentation_base_url:
             warn(
                 "Using deprecated parameter 'documentation_base_url', switch to 'documentation_uri_template'",
@@ -132,7 +141,7 @@ class ExceptionHandler:
         )
 
         for post_hook in self.post_hooks:
-            response = post_hook(content, request, response)
+            content, response = post_hook(content, request, response)
 
         return response
 
@@ -141,7 +150,7 @@ class CorsPostHook:
     def __init__(self: t.Self, config: CorsConfiguration) -> None:
         self.config = config
 
-    def __call__(self: t.Self, _content: dict, request: Request, response: JSONResponse) -> JSONResponse:
+    def __call__(self: t.Self, content: dict, request: Request, response: JSONResponse) -> JSONResponse:
         # Since the CORSMiddleware is not executed when an unhandled server exception
         # occurs, we need to manually set the CORS headers ourselves if we want the FE
         # to receive a proper JSON 500, opposed to a CORS error.
@@ -180,7 +189,40 @@ class CorsPostHook:
                 response.headers["Access-Control-Allow-Origin"] = origin
                 response.headers.add_vary_header("Origin")
 
-        return response
+        return content, response
+
+
+class StripExtras:
+    def __init__(
+        self: t.Self,
+        logger: logging.Logger | None = None,
+        mandatory_fields: list[str] | None = None,
+        exclude_status_codes: list[int] | None = None,
+        *,
+        enabled: bool = False,
+    ) -> None:
+        self.mandatory_fields = mandatory_fields or ["type", "title", "status", "detail"]
+        self.enabled = enabled
+        self.exclude_status_codes = exclude_status_codes or []
+        self.logger = logger
+
+    def __call__(self: t.Self, content: dict, _request: Request, response: JSONResponse) -> JSONResponse:
+        strip_extras = self.enabled and response.status_code not in self.exclude_status_codes
+
+        new_content = content.copy()
+        if strip_extras:
+            msg = "Stripping debug information from exception."
+            self.logger.debug(msg) if self.logger else None
+
+            for k, v in content.items():
+                if k not in self.mandatory_fields:
+                    msg = f"Removed {k}: {v}"
+                    self.logger.debug(msg) if self.logger else None
+                    new_content.pop(k)
+
+            response.body = json.dumps(new_content, separators=(",", ":")).encode("utf-8")
+
+        return new_content, response
 
 
 def generate_handler(  # noqa: PLR0913
