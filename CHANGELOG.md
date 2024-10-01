@@ -1,5 +1,11 @@
 # Changelog
 
+## v0.10.9 - 2024-10-01
+
+### Bug fixes
+
+- Support include_status_codes as an inverse for exclude_status_codes. [[e09a88b](https://github.com/NRWLDev/starlette-problem/commit/e09a88b9678cf50b0acf8a7733f6a81d8f14556a)]
+
 ## v0.10.8 - 2024-10-01
 
 ### Bug fixes
