@@ -123,6 +123,55 @@ class TestExceptionHandler:
             "detail": "Something went bad",
         }
 
+    def test_strip_extras_post_hook_disabled(self):
+        request = mock.Mock(headers={})
+        exc = SomethingWrongError("something bad", a="b")
+
+        eh = handler.generate_handler(post_hooks=[handler.StripExtrasPostHook()])
+        response = eh(request, exc)
+
+        assert (
+            response.body
+            == b'{"type":"something-wrong","title":"This is an error.","status":500,"a":"b","detail":"something bad"}'
+        )
+
+    def test_strip_extras_post_hook_enabled(self):
+        request = mock.Mock(headers={})
+        exc = SomethingWrongError("something bad", a="b")
+
+        eh = handler.generate_handler(post_hooks=[handler.StripExtrasPostHook(enabled=True)])
+        response = eh(request, exc)
+
+        assert (
+            response.body
+            == b'{"type":"something-wrong","title":"This is an error.","status":500,"detail":"something bad"}'
+        )
+
+    def test_strip_extras_post_hook_exclude_status_code(self):
+        request = mock.Mock(headers={})
+        exc = SomethingWrongError("something bad", a="b")
+
+        eh = handler.generate_handler(
+            post_hooks=[handler.StripExtrasPostHook(exclude_status_codes=[500], enabled=True)],
+        )
+        response = eh(request, exc)
+
+        assert (
+            response.body
+            == b'{"type":"something-wrong","title":"This is an error.","status":500,"a":"b","detail":"something bad"}'
+        )
+
+    def test_strip_extras_post_hook_custom_mandatory(self):
+        request = mock.Mock(headers={})
+        exc = SomethingWrongError("something bad", a="b")
+
+        eh = handler.generate_handler(
+            post_hooks=[handler.StripExtrasPostHook(mandatory_fields=["type", "title", "status", "a"], enabled=True)],
+        )
+        response = eh(request, exc)
+
+        assert response.body == b'{"type":"something-wrong","title":"This is an error.","status":500,"a":"b"}'
+
     def test_strip_debug(self):
         request = mock.Mock()
         exc = Exception("Something went bad")
@@ -431,7 +480,7 @@ async def test_exception_handler_in_app():
         },
     )
     transport = httpx.ASGITransport(app=app, raise_app_exceptions=False, client=("1.2.3.4", 123))
-    client = httpx.AsyncClient(transport=transport, app=app, base_url="https://test")
+    client = httpx.AsyncClient(transport=transport, base_url="https://test")
 
     r = await client.get("/endpoint")
     assert r.json() == {
@@ -455,7 +504,7 @@ async def test_exception_handler_in_app_post_register():
     )
 
     transport = httpx.ASGITransport(app=app, raise_app_exceptions=False, client=("1.2.3.4", 123))
-    client = httpx.AsyncClient(transport=transport, app=app, base_url="https://test")
+    client = httpx.AsyncClient(transport=transport, base_url="https://test")
 
     r = await client.get("/endpoint")
     assert r.json() == {
