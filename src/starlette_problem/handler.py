@@ -207,16 +207,20 @@ class StripExtrasPostHook:
         logger: logging.Logger | None = None,
         mandatory_fields: list[str] | None = None,
         exclude_status_codes: list[int] | None = None,
+        include_status_codes: list[int] | None = None,
         *,
         enabled: bool = False,
     ) -> None:
         self.mandatory_fields = mandatory_fields or ["type", "title", "status", "detail"]
         self.enabled = enabled
         self.exclude_status_codes = exclude_status_codes or []
+        self.include_status_codes = include_status_codes or []
         self.logger = logger
 
     def __call__(self: t.Self, content: dict, _request: Request, response: JSONResponse) -> JSONResponse:
-        strip_extras = self.enabled and response.status_code not in self.exclude_status_codes
+        strip_extras = self.enabled and (
+            response.status_code in self.include_status_codes or response.status_code not in self.exclude_status_codes
+        )
 
         new_content = content.copy()
         if strip_extras:

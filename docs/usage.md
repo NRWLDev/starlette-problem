@@ -60,8 +60,10 @@ fields that should always be returned, default fields are `["type", "title",
 "status", "detail"]`.
 
 For more fine-grained control, `exclude_status_codes=[500, ...]` can be used to
-allow extras for specific status codes. Allowing expected fields to reach the
-user, while suppressing unexpected server errors etc.
+allow extras for specific status codes. Alternatively if you have a lot of
+exclusions, `include_status_codes=[400, ...]` can be used to determine which
+status_codes to strip extras for. Allowing expected fields to reach the user,
+while suppressing unexpected server errors etc.
 
 ```python
 from starlette_problem.handler import StripExtrasPostHook, add_exception_handler
