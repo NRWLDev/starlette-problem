@@ -145,7 +145,7 @@ class ExceptionHandler:
             if isinstance(result, Response):
                 response = result
                 warn(
-                    "PostHook returning deprecated format `return response`, use `return (content, response)`.",
+                    f"PostHook {post_hook.__class__.__name__} returning deprecated format `return response`, use `return (content, response)`.",
                     FutureWarning,
                     stacklevel=2,
                 )
