@@ -1,5 +1,11 @@
 # Changelog
 
+## v0.11.1 - 2024-11-14
+
+### Bug fixes
+
+- Drop documentation_base_url and invalid Cors PostHook implementation and remove deprecation warnings. [[f75b8e0](https://github.com/NRWLDev/starlette-problem/commit/f75b8e09754db195bff76dbe85e55a097cbd2aef)]
+
 ## v0.11.0 - 2024-11-14
 
 ### Bug fixes
