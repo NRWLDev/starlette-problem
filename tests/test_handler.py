@@ -107,7 +107,9 @@ class TestExceptionHandler:
         request = mock.Mock(headers={})
         exc = SomethingWrongError("something bad", a="b")
 
-        eh = handler.generate_handler(post_hooks=[handler.StripExtrasPostHook()])
+        eh = handler.ExceptionHandler(
+            post_hooks=[handler.StripExtrasPostHook()],
+        )
         response = eh(request, exc)
 
         assert (
@@ -119,7 +121,9 @@ class TestExceptionHandler:
         request = mock.Mock(headers={})
         exc = SomethingWrongError("something bad", a="b")
 
-        eh = handler.generate_handler(post_hooks=[handler.StripExtrasPostHook(enabled=True)])
+        eh = handler.ExceptionHandler(
+            post_hooks=[handler.StripExtrasPostHook(enabled=True)],
+        )
         response = eh(request, exc)
 
         assert (
@@ -131,7 +135,7 @@ class TestExceptionHandler:
         request = mock.Mock(headers={})
         exc = SomethingWrongError("something bad", a="b")
 
-        eh = handler.generate_handler(
+        eh = handler.ExceptionHandler(
             post_hooks=[handler.StripExtrasPostHook(exclude_status_codes=[500], enabled=True)],
         )
         response = eh(request, exc)
@@ -145,7 +149,7 @@ class TestExceptionHandler:
         request = mock.Mock(headers={})
         exc = SomethingWrongError("something bad", a="b")
 
-        eh = handler.generate_handler(
+        eh = handler.ExceptionHandler(
             post_hooks=[handler.StripExtrasPostHook(mandatory_fields=["type", "title", "status", "a"], enabled=True)],
         )
         response = eh(request, exc)
@@ -306,41 +310,57 @@ class TestExceptionHandler:
         }
 
     def test_error_with_no_origin(self, cors):
+        app = Starlette()
         request = mock.Mock(headers={})
         exc = SomethingWrongError("something bad")
 
-        eh = handler.generate_handler(cors=cors)
+        eh = handler.add_exception_handler(
+            app=app,
+            cors=cors,
+        )
         response = eh(request, exc)
 
         assert "access-control-allow-origin" not in response.headers
 
     def test_error_with_origin(self, cors):
+        app = Starlette()
         request = mock.Mock(headers={"origin": "localhost"})
         exc = SomethingWrongError("something bad")
 
-        eh = handler.generate_handler(cors=cors)
+        eh = handler.add_exception_handler(
+            app=app,
+            cors=cors,
+        )
         response = eh(request, exc)
 
         assert "access-control-allow-origin" in response.headers
         assert response.headers["access-control-allow-origin"] == "*"
 
     def test_error_with_origin_and_cookie(self, cors):
+        app = Starlette()
         request = mock.Mock(headers={"origin": "localhost", "cookie": "something"})
         exc = SomethingWrongError("something bad")
 
-        eh = handler.generate_handler(cors=cors)
+        eh = handler.add_exception_handler(
+            app=app,
+            cors=cors,
+        )
         response = eh(request, exc)
 
         assert "access-control-allow-origin" in response.headers
         assert response.headers["access-control-allow-origin"] == "localhost"
 
     def test_missing_token_with_origin_limited_origins(self, cors):
+        app = Starlette()
         request = mock.Mock(headers={"origin": "localhost", "cookie": "something"})
         exc = SomethingWrongError("something bad")
 
         cors.allow_origins = ["localhost"]
 
-        eh = handler.generate_handler(cors=cors)
+        eh = handler.add_exception_handler(
+            app=app,
+            cors=cors,
+        )
         response = eh(request, exc)
 
         assert "access-control-allow-origin" in response.headers
@@ -348,12 +368,16 @@ class TestExceptionHandler:
         assert response.headers["access-control-allow-origin"] == "localhost"
 
     def test_missing_token_with_origin_limited_origins_no_match(self, cors):
+        app = Starlette()
         request = mock.Mock(headers={"origin": "localhost2", "cookie": "something"})
         exc = SomethingWrongError("something bad")
 
         cors.allow_origins = ["localhost"]
 
-        eh = handler.generate_handler(cors=cors)
+        eh = handler.add_exception_handler(
+            app=app,
+            cors=cors,
+        )
         response = eh(request, exc)
 
         assert "access-control-allow-origin" not in response.headers
@@ -367,7 +391,10 @@ class TestExceptionHandler:
         def hook(_request, exc) -> None:
             logger.debug(str(type(exc)))
 
-        eh = handler.ExceptionHandler(logger=logger, pre_hooks=[hook])
+        eh = handler.ExceptionHandler(
+            logger=logger,
+            pre_hooks=[hook],
+        )
         eh(request, exc)
 
         assert logger.debug.call_args == mock.call("<class 'ValueError'>")
@@ -379,7 +406,10 @@ async def test_exception_handler_in_app():
     def pre_hook(_req, _exc):
         m.call("pre-hook")
 
-    exception_handler = handler.generate_handler(
+    app = Starlette()
+
+    handler.add_exception_handler(
+        app=app,
         pre_hooks=[pre_hook],
         unhandled_wrappers={
             "422": CustomValidationError,
@@ -387,12 +417,6 @@ async def test_exception_handler_in_app():
         },
     )
 
-    app = Starlette(
-        exception_handlers={
-            Exception: exception_handler,
-            HTTPException: exception_handler,
-        },
-    )
     transport = httpx.ASGITransport(app=app, raise_app_exceptions=False, client=("1.2.3.4", 123))
     client = httpx.AsyncClient(transport=transport, base_url="https://test")
 
@@ -410,7 +434,7 @@ async def test_exception_handler_in_app_post_register():
     app = Starlette()
 
     handler.add_exception_handler(
-        app,
+        app=app,
         unhandled_wrappers={
             "422": CustomValidationError,
             "default": CustomUnhandledException,

@@ -193,7 +193,8 @@ class StripExtrasPostHook:
         return new_content, response
 
 
-def generate_handler(  # noqa: PLR0913
+def add_exception_handler(  # noqa: PLR0913
+    app: Starlette,
     logger: logging.Logger | None = None,
     cors: CorsConfiguration | None = None,
     unhandled_wrappers: dict[str, type[StatusProblem]] | None = None,
@@ -203,7 +204,7 @@ def generate_handler(  # noqa: PLR0913
     documentation_uri_template: str = "",
     *,
     strict_rfc9457: bool = False,
-) -> t.Callable:
+) -> ExceptionHandler:
     handlers = handlers or {}
     handlers.update(
         {
@@ -217,7 +218,7 @@ def generate_handler(  # noqa: PLR0913
         # Ensure runs before custom modifications
         post_hooks.insert(0, CorsPostHook(cors))
 
-    return ExceptionHandler(
+    eh = ExceptionHandler(
         logger=logger,
         unhandled_wrappers=unhandled_wrappers,
         handlers=handlers,
@@ -227,30 +228,8 @@ def generate_handler(  # noqa: PLR0913
         strict_rfc9457=strict_rfc9457,
     )
 
-
-def add_exception_handler(  # noqa: PLR0913
-    app: Starlette,
-    logger: logging.Logger | None = None,
-    cors: CorsConfiguration | None = None,
-    unhandled_wrappers: dict[str, type[StatusProblem]] | None = None,
-    handlers: dict[type[Exception], Handler] | None = None,
-    pre_hooks: list[PreHook] | None = None,
-    post_hooks: list[PostHook] | None = None,
-    documentation_uri_template: str = "",
-    *,
-    strict_rfc9457: bool = False,
-) -> None:
-    eh = generate_handler(
-        logger,
-        cors,
-        unhandled_wrappers,
-        handlers,
-        pre_hooks,
-        post_hooks,
-        documentation_uri_template,
-        strict_rfc9457=strict_rfc9457,
-    )
-
     app.add_exception_handler(Exception, eh)
     app.add_exception_handler(rfc9457.Problem, eh)
     app.add_exception_handler(HTTPException, eh)
+
+    return eh
