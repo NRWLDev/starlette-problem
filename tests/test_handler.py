@@ -62,26 +62,6 @@ class TestExceptionHandler:
             exc_info=(type(exc), exc, None),
         )
 
-    def test_documentation_base_url(self):
-        request = mock.Mock()
-        exc = Exception("Something went bad")
-
-        eh = handler.ExceptionHandler(
-            unhandled_wrappers={
-                "default": CustomUnhandledException,
-            },
-            documentation_base_url="https://docs/errors/",
-        )
-        response = eh(request, exc)
-
-        assert response.status_code == http.HTTPStatus.INTERNAL_SERVER_ERROR
-        assert json.loads(response.body) == {
-            "title": "Unhandled exception occurred.",
-            "type": "https://docs/errors/custom-unhandled-exception",
-            "status": 500,
-            "detail": "Something went bad",
-        }
-
     def test_documentation_uri_template(self):
         request = mock.Mock()
         exc = Exception("Something went bad")

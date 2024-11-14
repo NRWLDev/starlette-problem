@@ -3,7 +3,6 @@ from __future__ import annotations
 import http
 import json
 import typing as t
-from warnings import warn
 
 import rfc9457
 from starlette.exceptions import HTTPException
@@ -52,7 +51,6 @@ class ExceptionHandler:
         handlers: dict[type[Exception], Handler] | None = None,
         pre_hooks: list[PreHook] | None = None,
         post_hooks: list[PostHook] | None = None,
-        documentation_base_url: str | None = None,
         documentation_uri_template: str = "",
         *,
         strict_rfc9457: bool = False,
@@ -63,16 +61,7 @@ class ExceptionHandler:
         self.pre_hooks = pre_hooks or []
         self.post_hooks = post_hooks or []
         self.documentation_uri_template = documentation_uri_template
-        if not documentation_uri_template and documentation_base_url:
-            self.documentation_uri_template = f"{documentation_base_url.rstrip('/')}/{{type}}"
         self.strict = strict_rfc9457
-
-        if documentation_base_url:
-            warn(
-                "Using deprecated parameter 'documentation_base_url', switch to 'documentation_uri_template'",
-                FutureWarning,
-                stacklevel=2,
-            )
 
     def __call__(self: t.Self, request: Request, exc: Exception) -> Response:
         for pre_hook in self.pre_hooks:
@@ -116,16 +105,7 @@ class ExceptionHandler:
         )
 
         for post_hook in self.post_hooks:
-            result = post_hook(content, request, response)
-            if isinstance(result, Response):
-                response = result
-                warn(
-                    f"PostHook {post_hook.__class__.__name__} returning deprecated format `return response`, use `return (content, response)`.",
-                    FutureWarning,
-                    stacklevel=2,
-                )
-            else:
-                content, response = result
+            content, response = post_hook(content, request, response)
 
         return response
 
@@ -134,7 +114,7 @@ class CorsPostHook:
     def __init__(self: t.Self, config: CorsConfiguration) -> None:
         self.config = config
 
-    def __call__(self: t.Self, _content: dict, request: Request, response: Response) -> Response:
+    def __call__(self: t.Self, content: dict, request: Request, response: Response) -> Response:
         # Since the CORSMiddleware is not executed when an unhandled server exception
         # occurs, we need to manually set the CORS headers ourselves if we want the FE
         # to receive a proper JSON 500, opposed to a CORS error.
@@ -173,7 +153,7 @@ class CorsPostHook:
                 response.headers["Access-Control-Allow-Origin"] = origin
                 response.headers.add_vary_header("Origin")
 
-        return response
+        return content, response
 
 
 class StripExtrasPostHook:
@@ -220,7 +200,6 @@ def generate_handler(  # noqa: PLR0913
     handlers: dict[type[Exception], Handler] | None = None,
     pre_hooks: list[PreHook] | None = None,
     post_hooks: list[PostHook] | None = None,
-    documentation_base_url: str | None = None,
     documentation_uri_template: str = "",
     *,
     strict_rfc9457: bool = False,
@@ -244,7 +223,6 @@ def generate_handler(  # noqa: PLR0913
         handlers=handlers,
         pre_hooks=pre_hooks,
         post_hooks=post_hooks,
-        documentation_base_url=documentation_base_url,
         documentation_uri_template=documentation_uri_template,
         strict_rfc9457=strict_rfc9457,
     )
@@ -258,7 +236,6 @@ def add_exception_handler(  # noqa: PLR0913
     handlers: dict[type[Exception], Handler] | None = None,
     pre_hooks: list[PreHook] | None = None,
     post_hooks: list[PostHook] | None = None,
-    documentation_base_url: str | None = None,
     documentation_uri_template: str = "",
     *,
     strict_rfc9457: bool = False,
@@ -270,7 +247,6 @@ def add_exception_handler(  # noqa: PLR0913
         handlers,
         pre_hooks,
         post_hooks,
-        documentation_base_url,
         documentation_uri_template,
         strict_rfc9457=strict_rfc9457,
     )
