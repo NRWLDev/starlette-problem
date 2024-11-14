@@ -1,5 +1,11 @@
 # Changelog
 
+## v0.11.2 - 2024-11-14
+
+### Bug fixes
+
+- Drop support for generate_handler to simplify interface. [[5](https://github.com/NRWLDev/starlette-problem/issues/5)] [[ff8f38b](https://github.com/NRWLDev/starlette-problem/commit/ff8f38b5763b313abfb29081b73de1ee10a44f58)]
+
 ## v0.11.1 - 2024-11-14
 
 ### Bug fixes
