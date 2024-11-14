@@ -55,8 +55,6 @@ class ExceptionHandler:
         documentation_base_url: str | None = None,
         documentation_uri_template: str = "",
         *,
-        strip_debug: bool | None = None,
-        strip_debug_codes: list[int] | None = None,
         strict_rfc9457: bool = False,
     ) -> None:
         self.logger = logger
@@ -67,16 +65,7 @@ class ExceptionHandler:
         self.documentation_uri_template = documentation_uri_template
         if not documentation_uri_template and documentation_base_url:
             self.documentation_uri_template = f"{documentation_base_url.rstrip('/')}/{{type}}"
-        self.strip_debug = strip_debug
-        self.strip_debug_codes = strip_debug_codes or []
         self.strict = strict_rfc9457
-
-        if strip_debug is not None or strip_debug_codes is not None:
-            warn(
-                "Using deprecated parameter 'strip_debug' or `strip_debug_codes`, switch to 'StripExtrasPostHook'.",
-                FutureWarning,
-                stacklevel=2,
-            )
 
         if documentation_base_url:
             warn(
@@ -85,7 +74,7 @@ class ExceptionHandler:
                 stacklevel=2,
             )
 
-    def __call__(self: t.Self, request: Request, exc: Exception) -> Response:  # noqa: C901
+    def __call__(self: t.Self, request: Request, exc: Exception) -> Response:
         for pre_hook in self.pre_hooks:
             pre_hook(request, exc)
 
@@ -113,25 +102,11 @@ class ExceptionHandler:
         if ret.status >= http.HTTPStatus.INTERNAL_SERVER_ERROR and self.logger:
             self.logger.exception(ret.title, exc_info=(type(exc), exc, exc.__traceback__))
 
-        strip_debug_ = self.strip_debug or ret.status in self.strip_debug_codes
-
-        if strip_debug_ and (ret.detail or ret.extras) and self.logger:
-            msg = "Stripping debug information from exception."
-            self.logger.debug(msg)
-
-            for k, v in {
-                "detail": ret.detail,
-                **ret.extras,
-            }.items():
-                msg = f"Removed {k}: {v}"
-                self.logger.debug(msg)
-
         headers = {"content-type": "application/problem+json"}
         headers.update(ret.headers or {})
 
         content = ret.marshal(
             uri=self.documentation_uri_template,
-            strip_debug=strip_debug_,
             strict=self.strict,
         )
         response = JSONResponse(
@@ -248,8 +223,6 @@ def generate_handler(  # noqa: PLR0913
     documentation_base_url: str | None = None,
     documentation_uri_template: str = "",
     *,
-    strip_debug: bool | None = None,
-    strip_debug_codes: list[int] | None = None,
     strict_rfc9457: bool = False,
 ) -> t.Callable:
     handlers = handlers or {}
@@ -273,8 +246,6 @@ def generate_handler(  # noqa: PLR0913
         post_hooks=post_hooks,
         documentation_base_url=documentation_base_url,
         documentation_uri_template=documentation_uri_template,
-        strip_debug=strip_debug,
-        strip_debug_codes=strip_debug_codes,
         strict_rfc9457=strict_rfc9457,
     )
 
@@ -290,8 +261,6 @@ def add_exception_handler(  # noqa: PLR0913
     documentation_base_url: str | None = None,
     documentation_uri_template: str = "",
     *,
-    strip_debug: bool | None = False,
-    strip_debug_codes: list[int] | None = None,
     strict_rfc9457: bool = False,
 ) -> None:
     eh = generate_handler(
@@ -303,8 +272,6 @@ def add_exception_handler(  # noqa: PLR0913
         post_hooks,
         documentation_base_url,
         documentation_uri_template,
-        strip_debug=strip_debug,
-        strip_debug_codes=strip_debug_codes,
         strict_rfc9457=strict_rfc9457,
     )
 
