@@ -1,5 +1,12 @@
 # Changelog
 
+## v0.11.0 - 2024-11-14
+
+### Bug fixes
+
+- **Breaking** Remove deprecated strip_debug flags. [[c6c2f5a](https://github.com/NRWLDev/starlette-problem/commit/c6c2f5a4d04cc3dae1ff21ec006c55840e359e3a)]
+- Clearer deprecation warning with PostHook return type is invalid. [[d8c4160](https://github.com/NRWLDev/starlette-problem/commit/d8c4160e54c63ba38df2e40245f4f87263dcd9c2)]
+
 ## v0.10.9 - 2024-10-01
 
 ### Bug fixes
