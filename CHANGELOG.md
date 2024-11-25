@@ -1,5 +1,11 @@
 # Changelog
 
+## v0.11.3 - 2024-11-25
+
+### Miscellaneous
+
+- Fix up return type hint for StripExtrasPostHook [[2aeb832](https://github.com/NRWLDev/starlette-problem/commit/2aeb832840f5e9794c73dfa503776493797edadd)]
+
 ## v0.11.2 - 2024-11-14
 
 ### Bug fixes
