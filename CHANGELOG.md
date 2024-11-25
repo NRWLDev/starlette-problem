@@ -1,5 +1,11 @@
 # Changelog
 
+## v0.11.4 - 2024-11-25
+
+### Miscellaneous
+
+- Fix up return type hint for CorsPostHook [[47a69b6](https://github.com/NRWLDev/starlette-problem/commit/47a69b66e67f3359e9bb3b1f4c9ebde631b4e9b3)]
+
 ## v0.11.3 - 2024-11-25
 
 ### Miscellaneous

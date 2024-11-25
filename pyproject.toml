@@ -1,6 +1,6 @@
 [project]
 name = "starlette-problem"
-version = "0.11.3"
+version = "0.11.4"
 description = "Starlette support for RFC9457 problems."
 authors = [
     {name = "Daniel Edgecombe", email = "daniel@nrwl.co"},
@@ -54,7 +54,7 @@ dev = [
 ]
 
 [tool.changelog_gen]
-current_version = "0.11.3"
+current_version = "0.11.4"
 reject_empty = true
 statistics = true
 allowed_branches = [
