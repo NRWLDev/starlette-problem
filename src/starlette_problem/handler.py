@@ -172,7 +172,7 @@ class StripExtrasPostHook:
         self.include_status_codes = include_status_codes or []
         self.logger = logger
 
-    def __call__(self: t.Self, content: dict, _request: Request, response: JSONResponse) -> JSONResponse:
+    def __call__(self: t.Self, content: dict, _request: Request, response: JSONResponse) -> tuple[dict, JSONResponse]:
         strip_extras = self.enabled and (
             response.status_code in self.include_status_codes or response.status_code not in self.exclude_status_codes
         )
