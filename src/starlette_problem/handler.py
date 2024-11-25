@@ -114,7 +114,7 @@ class CorsPostHook:
     def __init__(self: t.Self, config: CorsConfiguration) -> None:
         self.config = config
 
-    def __call__(self: t.Self, content: dict, request: Request, response: Response) -> Response:
+    def __call__(self: t.Self, content: dict, request: Request, response: Response) -> [dict, Response]:
         # Since the CORSMiddleware is not executed when an unhandled server exception
         # occurs, we need to manually set the CORS headers ourselves if we want the FE
         # to receive a proper JSON 500, opposed to a CORS error.
