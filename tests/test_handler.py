@@ -116,6 +116,7 @@ class TestExceptionHandler:
             response.body
             == b'{"type":"something-wrong","title":"This is an error.","status":500,"a":"b","detail":"something bad"}'
         )
+        assert response.headers["content-length"] == "100"
 
     def test_strip_extras_post_hook_enabled(self):
         request = mock.Mock(headers={})
@@ -130,6 +131,7 @@ class TestExceptionHandler:
             response.body
             == b'{"type":"something-wrong","title":"This is an error.","status":500,"detail":"something bad"}'
         )
+        assert response.headers["content-length"] == "92"
 
     def test_strip_extras_post_hook_exclude_status_code(self):
         request = mock.Mock(headers={})

@@ -106,6 +106,7 @@ class ExceptionHandler:
 
         for post_hook in self.post_hooks:
             content, response = post_hook(content, request, response)
+            response.headers["content-length"] = str(len(response.body))
 
         return response
 
