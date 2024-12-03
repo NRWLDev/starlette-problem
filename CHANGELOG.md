@@ -1,5 +1,11 @@
 # Changelog
 
+## v0.11.5 - 2024-12-03
+
+### Bug fixes
+
+- Response content-length header needs to be recalculated if the response body is mutated in a post hook. [[ad2fc7f](https://github.com/NRWLDev/starlette-problem/commit/ad2fc7f98f55cca7daf689cefc6cfe4ed8077f1f)]
+
 ## v0.11.4 - 2024-11-25
 
 ### Miscellaneous
