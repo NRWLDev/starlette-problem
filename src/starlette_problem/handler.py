@@ -175,7 +175,8 @@ class StripExtrasPostHook:
 
     def __call__(self: t.Self, content: dict, _request: Request, response: JSONResponse) -> tuple[dict, JSONResponse]:
         strip_extras = self.enabled and (
-            response.status_code in self.include_status_codes or response.status_code not in self.exclude_status_codes
+            response.status_code in self.include_status_codes
+            or (not self.include_status_codes and response.status_code not in self.exclude_status_codes)
         )
 
         new_content = content.copy()
