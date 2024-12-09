@@ -1,5 +1,11 @@
 # Changelog
 
+## v0.11.6 - 2024-12-09
+
+### Bug fixes
+
+- Fix issue where strip extra post hook with include codes would include everything due to exclude codes defaulting to all codes. [[e1fa27a](https://github.com/NRWLDev/starlette-problem/commit/e1fa27a27bed91c5f8b5cace69d252b8c5df5921)]
+
 ## v0.11.5 - 2024-12-03
 
 ### Bug fixes
