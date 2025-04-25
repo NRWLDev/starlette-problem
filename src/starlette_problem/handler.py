@@ -21,7 +21,7 @@ if t.TYPE_CHECKING:
     from starlette_problem.cors import CorsConfiguration
 
 
-Handler = t.Callable[["ExceptionHandler", Request, Exception], t.Optional[Problem]]
+Handler = t.Callable[["ExceptionHandler", Request, Exception], Problem]
 PreHook = t.Callable[[Request, Exception], None]
 PostHook = t.Callable[[dict, Request, Response], tuple[dict, Response]]
 
@@ -207,12 +207,12 @@ def add_exception_handler(  # noqa: PLR0913
     *,
     strict_rfc9457: bool = False,
 ) -> ExceptionHandler:
+    handlers_: dict[type[Exception], Handler] = {
+        HTTPException: http_exception_handler,
+    }
     handlers = handlers or {}
-    handlers.update(
-        {
-            HTTPException: http_exception_handler,
-        },
-    )
+    handlers_.update(handlers)
+
     pre_hooks = pre_hooks or []
     post_hooks = post_hooks or []
 
@@ -223,7 +223,7 @@ def add_exception_handler(  # noqa: PLR0913
     eh = ExceptionHandler(
         logger=logger,
         unhandled_wrappers=unhandled_wrappers,
-        handlers=handlers,
+        handlers=handlers_,
         pre_hooks=pre_hooks,
         post_hooks=post_hooks,
         documentation_uri_template=documentation_uri_template,
