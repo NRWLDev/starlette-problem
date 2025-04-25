@@ -1,5 +1,11 @@
 # Changelog
 
+## v0.11.7 - 2025-04-25
+
+### Bug fixes
+
+- Allow users to provide HTTPException handler override. [[ad397a2](https://github.com/NRWLDev/starlette-problem/commit/ad397a270812debd6e4fe65849143199afd94e3a)]
+
 ## v0.11.6 - 2024-12-09
 
 ### Bug fixes
