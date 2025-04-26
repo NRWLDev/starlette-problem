@@ -26,7 +26,7 @@ PreHook = t.Callable[[Request, Exception], None]
 PostHook = t.Callable[[dict, Request, Response], tuple[dict, Response]]
 
 
-def http_exception_handler(eh: ExceptionHandler, _request: Request, exc: HTTPException) -> Problem:
+def http_exception_handler_(eh: ExceptionHandler, _request: Request, exc: HTTPException) -> Problem:
     wrapper = eh.unhandled_wrappers.get(str(exc.status_code))
     title, type_ = convert_status_code(exc.status_code)
     detail = exc.detail
@@ -204,14 +204,14 @@ def add_exception_handler(  # noqa: PLR0913
     pre_hooks: list[PreHook] | None = None,
     post_hooks: list[PostHook] | None = None,
     documentation_uri_template: str = "",
+    http_exception_handler: Handler = http_exception_handler_,
     *,
     strict_rfc9457: bool = False,
 ) -> ExceptionHandler:
-    handlers_: dict[type[Exception], Handler] = {
-        HTTPException: http_exception_handler,
-    }
     handlers = handlers or {}
-    handlers_.update(handlers)
+    handlers.update({
+        HTTPException: http_exception_handler,
+    })
 
     pre_hooks = pre_hooks or []
     post_hooks = post_hooks or []
@@ -223,7 +223,7 @@ def add_exception_handler(  # noqa: PLR0913
     eh = ExceptionHandler(
         logger=logger,
         unhandled_wrappers=unhandled_wrappers,
-        handlers=handlers_,
+        handlers=handlers,
         pre_hooks=pre_hooks,
         post_hooks=post_hooks,
         documentation_uri_template=documentation_uri_template,

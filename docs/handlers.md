@@ -51,6 +51,33 @@ Any instance of CustomBaseError, or any subclasses, that reach the exception
 handler will then be converted into a Problem response, as opposed to an
 unhandled error response.
 
+## Builtin Handlers
+
+Starlette HTTPException instances are handled by default, to customise how
+these errors are processed, provide a handler for
+`starlette.exceptions.HTTPException` similar to the custom handlers previously
+defined, but rather than passing it to handlers, use the
+`http_exception_handler` parameter.
+
+```python
+import starlette.applications
+from starlette.exceptions import HTTPException
+from starlette_problem.error import Problem
+from starlette_problem.handler import ExceptionHandler, add_exception_handler
+from starlette.requests import Request
+
+
+def my_custom_handler(eh: ExceptionHandler, request: Request, exc: HTTPException) -> Problem:
+    return Problem(...)
+
+
+app = starlette.applications.Starlette()
+add_exception_handler(
+    app,
+    http_exception_handler=my_custom_handler,
+)
+```
+
 ### Optional handling
 
 In some cases you may want to handle specific cases for a type of exception,
