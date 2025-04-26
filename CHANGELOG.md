@@ -1,5 +1,11 @@
 # Changelog
 
+## v0.12.0 - 2025-04-26
+
+### Bug fixes
+
+- **Breaking** Migrate http_exception_handler definition to a first class parameter. [[e5f078c](https://github.com/NRWLDev/starlette-problem/commit/e5f078cae454b84c56af26211ed7276a2a7e6781)]
+
 ## v0.11.7 - 2025-04-25
 
 ### Bug fixes
