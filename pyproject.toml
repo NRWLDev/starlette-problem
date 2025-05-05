@@ -33,6 +33,7 @@ dependencies = [
 
 [project.urls]
 homepage="https://github.com/NRWLDev/starlette-problem/"
+documentation="https://nrwldev.github.io/starlette-problem/"
 
 [project.optional-dependencies]
 dev = [
