@@ -1,5 +1,11 @@
 # Changelog
 
+## v0.12.2 - 2025-05-05
+
+### Documentation
+
+- Add documentation url for pypi. [[c6211c5](https://github.com/NRWLDev/starlette-problem/commit/c6211c5629c1b7cbe4f98a0eb6d7b82cdc7d63f6)]
+
 ## v0.12.1 - 2025-05-05
 
 ### Bug fixes
