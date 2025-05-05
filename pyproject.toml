@@ -6,8 +6,6 @@ authors = [
     {name = "Daniel Edgecombe", email = "daniel@nrwl.co"},
 ]
 license = "Apache-2.0"
-repository="https://github.com/NRWLDev/starlette-problem/"
-homepage="https://github.com/NRWLDev/starlette-problem/"
 readme = "README.md"
 requires-python = ">=3.9"
 keywords = ["exception", "handler", "webdev", "starlette"]
@@ -32,6 +30,9 @@ classifiers = [
 dependencies = [
     "rfc9457 >= 0.1.1",
 ]
+
+[project.urls]
+homepage="https://github.com/NRWLDev/starlette-problem/"
 
 [project.optional-dependencies]
 dev = [
