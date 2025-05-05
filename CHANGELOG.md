@@ -1,5 +1,11 @@
 # Changelog
 
+## v0.12.1 - 2025-05-05
+
+### Bug fixes
+
+- Ensure urls render in pypi. [[6832a10](https://github.com/NRWLDev/starlette-problem/commit/6832a101362c2c570919b03d60d0299d87e7e820)]
+
 ## v0.12.0 - 2025-04-26
 
 ### Bug fixes
