@@ -56,7 +56,7 @@ name = "click"
 version = "8.1.7"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
-    { name = "colorama", marker = "platform_system == 'Windows'" },
+    { name = "colorama", marker = "sys_platform == 'win32'" },
 ]
 sdist = { url = "https://files.pythonhosted.org/packages/96/d3/f04c7bfcf5c1862a2a5b845c6b2b360488cf47af55dfa79c98f6a6bf98b5/click-8.1.7.tar.gz", hash = "sha256:ca9853ad459e787e2192211578cc907e7594e294c7ccc834310722b41b9ca6de", size = 336121 }
 wheels = [
@@ -574,14 +574,14 @@ wheels = [
 
 [[package]]
 name = "rfc9457"
-version = "0.2.2"
+version = "0.3.4"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "multidict" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/a6/8c/f50b7458a1708ae10d0deff0cd99e89b3d431b615281245f0d23a2296d84/rfc9457-0.2.2.tar.gz", hash = "sha256:e62438b455adf80c28a924c281e96d954dd700e1e80be78db7db31acf5064d05", size = 46833 }
+sdist = { url = "https://files.pythonhosted.org/packages/c1/4b/fa2dcf24b0b380e3f86380f4638cfda3f5b2d7ceb90808d97e22414b6611/rfc9457-0.3.4.tar.gz", hash = "sha256:221b105b9ea6153b10f2ddd3cf76b71bea09a3bf7fc82b023ebfd0fb2b42788c", size = 47974 }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/f9/dc/e59e8f3ddad1366bbdef94728548680e458dc42794e6bf8de5d9933f2555/rfc9457-0.2.2-py3-none-any.whl", hash = "sha256:488e745142bbc62320e0e9a4ec6bac9ac48e95398446b9d84d655b3a67af65fe", size = 8176 },
+    { url = "https://files.pythonhosted.org/packages/cb/12/6b6f2229423e0beee5d3d9ec82e623a5015a1683276afb3cad49b69fd046/rfc9457-0.3.4-py3-none-any.whl", hash = "sha256:f7abd203504ae5cfd44aae23f3362d4d042f44268b300e5cfa9f9837c887b705", size = 8762 },
 ]
 
 [[package]]
@@ -700,7 +700,7 @@ wheels = [
 
 [[package]]
 name = "starlette-problem"
-version = "0.10.6"
+version = "0.12.2"
 source = { editable = "." }
 dependencies = [
     { name = "rfc9457" },
@@ -729,7 +729,7 @@ requires-dist = [
     { name = "pytest-cov", marker = "extra == 'dev'", specifier = ">=4.1.0" },
     { name = "pytest-httpx", marker = "extra == 'dev'", specifier = ">=0.26.0" },
     { name = "pytest-random-order", marker = "extra == 'dev'", specifier = ">=1.0" },
-    { name = "rfc9457", specifier = ">=0.1.1" },
+    { name = "rfc9457", specifier = ">=0.3.4" },
     { name = "ruff", marker = "extra == 'dev'", specifier = ">=0.6.4" },
     { name = "starlette", marker = "extra == 'dev'" },
     { name = "uvicorn", marker = "extra == 'dev'" },

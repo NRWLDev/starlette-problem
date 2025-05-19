@@ -9,6 +9,7 @@ nav:
   - error.md
   - handlers.md
   - hooks.md
+  - openapi.md
 theme:
   name: material
   favicon: favicon.svg
