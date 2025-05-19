@@ -1,5 +1,11 @@
 # Changelog
 
+## v0.12.3 - 2025-05-19
+
+### Features and Improvements
+
+- Add support for generating openapi schema and openapi.json [[9](https://github.com/NRWLDev/starlette-problem/issues/9)] [[c6c3a82](https://github.com/NRWLDev/starlette-problem/commit/c6c3a82fc231e1b0a30088fcec54a05f5283b9cc)]
+
 ## v0.12.2 - 2025-05-05
 
 ### Documentation
