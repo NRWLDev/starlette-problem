@@ -1,5 +1,15 @@
 # Changelog
 
+## v0.13.0 - 2026-01-07
+
+### Features and Improvements
+
+- **Breaking** Drop python 3.9 support. [[5611eea](https://github.com/NRWLDev/starlette-problem/commit/5611eea38355653d19b2cb78837bd3ea0f0d70c4)]
+
+### Bug fixes
+
+- Add openapi to examples. [[402bfef](https://github.com/NRWLDev/starlette-problem/commit/402bfef2b304448ba1a4726622c1ed62ef8f117b)]
+
 ## v0.12.3 - 2025-05-19
 
 ### Features and Improvements
