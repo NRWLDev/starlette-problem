@@ -7,7 +7,7 @@ authors = [
 ]
 license = "Apache-2.0"
 readme = "README.md"
-requires-python = ">=3.9"
+requires-python = ">=3.10"
 keywords = ["exception", "handler", "webdev", "starlette"]
 classifiers = [
     "Development Status :: 4 - Beta",
@@ -19,8 +19,6 @@ classifiers = [
     "Topic :: Utilities",
     "Programming Language :: Python",
     "Programming Language :: Python :: 3 :: Only",
-    "Programming Language :: Python :: 3.8",
-    "Programming Language :: Python :: 3.9",
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
@@ -28,7 +26,7 @@ classifiers = [
 ]
 
 dependencies = [
-    "rfc9457 >= 0.3.4",
+    "rfc9457 >= 0.4.0",
 ]
 
 [project.urls]
@@ -41,18 +39,18 @@ dev = [
     "uvicorn",
 
     # test
-    "pytest >= 7.4.3",
-    "pytest-asyncio >= 0.21",
-    "pytest-cov >= 4.1.0",
-    "pytest-httpx >= 0.26.0",
-    "pytest-random-order >= 1.0",
+    "pytest >= 9.0.2",
+    "pytest-asyncio >= 1.3.0",
+    "pytest-cov >= 7.0.0",
+    "pytest-httpx >= 0.36.0",
+    "pytest-random-order >= 1.2.0",
 
     # style
-    "ruff >= 0.6.4",
-    "pre-commit >= 3.7.1",
+    "ruff >= 0.14.10",
+    "pre-commit >= 4.5.1",
 
     # release
-    "changelog-gen >= 0.12",
+    "changelog-gen >= 0.13.8",
 ]
 
 [tool.changelog_gen]
@@ -109,7 +107,7 @@ source = ["src/starlette_problem"]
 
 [tool.ruff]
 line-length = 120
-target-version = "py38"
+target-version = "py310"
 
 [tool.ruff.lint]
 select = ["ALL"]
