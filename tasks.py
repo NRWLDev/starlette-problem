@@ -14,7 +14,8 @@ def current_branch():
     """Get the current branch from git cli using subprocess."""
     try:
         rev_parse_out = (
-            subprocess.check_output(
+            subprocess
+            .check_output(
                 [
                     "git",
                     "rev-parse",
