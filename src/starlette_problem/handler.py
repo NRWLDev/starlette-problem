@@ -165,8 +165,8 @@ class StripExtrasPostHook:
         self,
         logger: logging.Logger | None = None,
         mandatory_fields: list[str] | None = None,
-        exclude_status_codes: list[int] | None = None,
-        include_status_codes: list[int] | None = None,
+        exclude_status_codes: list[int | str] | None = None,
+        include_status_codes: list[int | str] | None = None,
         *,
         enabled: bool = False,
     ) -> None:
@@ -178,8 +178,17 @@ class StripExtrasPostHook:
 
     def __call__(self, content: dict, _request: Request, response: JSONResponse) -> tuple[dict, JSONResponse]:
         strip_extras = self.enabled and (
-            response.status_code in self.include_status_codes
-            or (not self.include_status_codes and response.status_code not in self.exclude_status_codes)
+            (
+                response.status_code in self.include_status_codes
+                or f"type:{content['type']}" in self.include_status_codes
+            )
+            or (
+                not self.include_status_codes
+                and (
+                    response.status_code not in self.exclude_status_codes
+                    and f"type:{content['type']}" not in self.exclude_status_codes
+                )
+            )
         )
 
         new_content = content.copy()

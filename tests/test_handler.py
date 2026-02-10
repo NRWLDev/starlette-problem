@@ -147,6 +147,20 @@ class TestExceptionHandler:
             == b'{"type":"something-wrong","title":"This is an error.","status":500,"a":"b","detail":"something bad"}'
         )
 
+    def test_strip_extras_post_hook_exclude_type(self):
+        request = mock.Mock(headers={})
+        exc = SomethingWrongError("something bad", a="b")
+
+        eh = handler.ExceptionHandler(
+            post_hooks=[handler.StripExtrasPostHook(exclude_status_codes=["type:something-wrong"], enabled=True)],
+        )
+        response = eh(request, exc)
+
+        assert (
+            response.body
+            == b'{"type":"something-wrong","title":"This is an error.","status":500,"a":"b","detail":"something bad"}'
+        )
+
     def test_strip_extras_post_hook_include_status_code(self):
         request = mock.Mock(headers={})
         exc = SomethingWrongError("something bad", a="b")
@@ -161,12 +175,40 @@ class TestExceptionHandler:
             == b'{"type":"something-wrong","title":"This is an error.","status":500,"detail":"something bad"}'
         )
 
+    def test_strip_extras_post_hook_include_type(self):
+        request = mock.Mock(headers={})
+        exc = SomethingWrongError("something bad", a="b")
+
+        eh = handler.ExceptionHandler(
+            post_hooks=[handler.StripExtrasPostHook(include_status_codes=["type:something-wrong"], enabled=True)],
+        )
+        response = eh(request, exc)
+
+        assert (
+            response.body
+            == b'{"type":"something-wrong","title":"This is an error.","status":500,"detail":"something bad"}'
+        )
+
     def test_strip_extras_post_hook_include_status_code_correctly_allows_other_codes_through(self):
         request = mock.Mock(headers={})
         exc = SomethingWrongError("something bad", a="b")
 
         eh = handler.ExceptionHandler(
             post_hooks=[handler.StripExtrasPostHook(include_status_codes=[400], enabled=True)],
+        )
+        response = eh(request, exc)
+
+        assert (
+            response.body
+            == b'{"type":"something-wrong","title":"This is an error.","status":500,"a":"b","detail":"something bad"}'
+        )
+
+    def test_strip_extras_post_hook_include_status_code_correctly_allows_other_types_through(self):
+        request = mock.Mock(headers={})
+        exc = SomethingWrongError("something bad", a="b")
+
+        eh = handler.ExceptionHandler(
+            post_hooks=[handler.StripExtrasPostHook(include_status_codes=["type:something-else"], enabled=True)],
         )
         response = eh(request, exc)
 
