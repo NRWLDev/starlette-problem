@@ -193,16 +193,10 @@ class StripExtrasPostHook:
 
     def __call__(self, content: dict, _request: Request, response: JSONResponse) -> tuple[dict, JSONResponse]:
         strip_extras = self.enabled and (
-            (
-                response.status_code in self.include_status_codes
-                or f"type:{content['type']}" in self.include_status_codes
-            )
+            (response.status_code in self.include or f"type:{content['type']}" in self.include)
             or (
-                not self.include_status_codes
-                and (
-                    response.status_code not in self.exclude_status_codes
-                    and f"type:{content['type']}" not in self.exclude_status_codes
-                )
+                not self.include
+                and (response.status_code not in self.exclude and f"type:{content['type']}" not in self.exclude)
             )
         )
 
