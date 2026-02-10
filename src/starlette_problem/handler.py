@@ -23,26 +23,10 @@ if t.TYPE_CHECKING:
 
 ExceptionType = t.TypeVar("ExceptionType", bound=Exception)
 ResponseType = t.TypeVar("ResponseType", bound=Response)
-Handler = t.Callable[["ExceptionHandler", Request, ExceptionType], Problem]
+ExceptionHandlerType = t.TypeVar("ExceptionHandlerType", bound="ExceptionHandler")
+Handler = t.Callable[[ExceptionHandlerType, Request, ExceptionType], Problem]
 PreHook = t.Callable[[Request, Exception], None]
 PostHook = t.Callable[[dict, Request, ResponseType], tuple[dict, ResponseType]]
-
-
-def http_exception_handler_(eh: ExceptionHandler, _request: Request, exc: HTTPException) -> Problem:
-    wrapper = eh.unhandled_wrappers.get(str(exc.status_code))
-    title, type_ = convert_status_code(exc.status_code)
-    detail = exc.detail
-    return (
-        wrapper(detail, headers=exc.headers)
-        if wrapper
-        else Problem(
-            title=title,
-            type_=type_,
-            detail=detail,
-            status=exc.status_code,
-            headers=exc.headers,  # ty: ignore[invalid-argument-type]
-        )
-    )
 
 
 class ExceptionHandler:
@@ -113,6 +97,23 @@ class ExceptionHandler:
         return response
 
 
+def http_exception_handler_(eh: ExceptionHandlerType, _request: Request, exc: HTTPException) -> Problem:
+    wrapper = eh.unhandled_wrappers.get(str(exc.status_code))
+    title, type_ = convert_status_code(exc.status_code)
+    detail = exc.detail
+    return (
+        wrapper(detail, headers=exc.headers)
+        if wrapper
+        else Problem(
+            title=title,
+            type_=type_,
+            detail=detail,
+            status=exc.status_code,
+            headers=exc.headers,  # ty: ignore[invalid-argument-type]
+        )
+    )
+
+
 class CorsPostHook:
     def __init__(self, config: CorsConfiguration) -> None:
         self.config = config
@@ -131,8 +132,8 @@ class CorsPostHook:
         if origin:
             # Have the middleware do the heavy lifting for us to parse
             # all the config, then update our response headers
-            mw = CORSMiddleware(  # ty: ignore[invalid-argument-type]
-                app=None,
+            mw = CORSMiddleware(
+                app=None,  # ty: ignore[invalid-argument-type]
                 allow_origins=self.config.allow_origins,
                 allow_credentials=self.config.allow_credentials,
                 allow_methods=self.config.allow_methods,
