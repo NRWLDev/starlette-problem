@@ -1,5 +1,11 @@
 # Changelog
 
+## v0.13.2 - 2026-02-10
+
+### Miscellaneous
+
+- Correctly type Handler for subclass of ExceptionHandler. [[8eecf1d](https://github.com/NRWLDev/starlette-problem/commit/8eecf1dfab7b333a6b34d3ad9ab73f1681c77e80)]
+
 ## v0.13.1 - 2026-02-10
 
 ### Miscellaneous
