@@ -735,14 +735,14 @@ wheels = [
 
 [[package]]
 name = "rfc9457"
-version = "0.4.0"
+version = "0.4.1"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "multidict" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/16/e9/506dfa70ebe57312cc507f9262ad2066ef1c197fe322c7b9652137bed55e/rfc9457-0.4.0.tar.gz", hash = "sha256:68bdaa494f52210a939f1ada72d0c3dea87434e7ba4eeea854ab759d7da7466e", size = 69945 }
+sdist = { url = "https://files.pythonhosted.org/packages/6f/bf/9004fea8639bcbfdfa4f055a174520923dc151d7e2236fa00a62bf582009/rfc9457-0.4.1.tar.gz", hash = "sha256:f754decf8cc42d93af40be455c77e0a1be19bef3826adf9feb91f849bcbd56a8", size = 70086 }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/7b/19/269252791607842d0597e59133c1c1e1256d564a297e54ab977a0eb920df/rfc9457-0.4.0-py3-none-any.whl", hash = "sha256:30b0df25b21e6891fc412f252a75672540975bbc20cbd75f579cbeed6d2b59a6", size = 8754 },
+    { url = "https://files.pythonhosted.org/packages/d9/e2/82adc9e1b4b93e958220adbc2aab4e55de5bf4f795c86897a82f0a7df79a/rfc9457-0.4.1-py3-none-any.whl", hash = "sha256:67d68b2b3194eb268ad59b27fba3126705366ebaaa5fc182e84ce2437c4b7d37", size = 8798 },
 ]
 
 [[package]]

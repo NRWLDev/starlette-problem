@@ -21,9 +21,11 @@ if t.TYPE_CHECKING:
     from starlette_problem.cors import CorsConfiguration
 
 
-Handler = t.Callable[["ExceptionHandler", Request, Exception], Problem]
+ExceptionType = t.TypeVar("ExceptionType", bound=Exception)
+ResponseType = t.TypeVar("ResponseType", bound=Response)
+Handler = t.Callable[["ExceptionHandler", Request, ExceptionType], Problem]
 PreHook = t.Callable[[Request, Exception], None]
-PostHook = t.Callable[[dict, Request, Response], tuple[dict, Response]]
+PostHook = t.Callable[[dict, Request, ResponseType], tuple[dict, ResponseType]]
 
 
 def http_exception_handler_(eh: ExceptionHandler, _request: Request, exc: HTTPException) -> Problem:
@@ -38,14 +40,14 @@ def http_exception_handler_(eh: ExceptionHandler, _request: Request, exc: HTTPEx
             type_=type_,
             detail=detail,
             status=exc.status_code,
-            headers=exc.headers,
+            headers=exc.headers,  # ty: ignore[invalid-argument-type]
         )
     )
 
 
 class ExceptionHandler:
     def __init__(  # noqa: PLR0913
-        self: t.Self,
+        self,
         logger: logging.Logger | None = None,
         unhandled_wrappers: dict[str, type[StatusProblem]] | None = None,
         handlers: dict[type[Exception], Handler] | None = None,
@@ -63,7 +65,7 @@ class ExceptionHandler:
         self.documentation_uri_template = documentation_uri_template
         self.strict = strict_rfc9457
 
-    def __call__(self: t.Self, request: Request, exc: Exception) -> Response:
+    def __call__(self, request: Request, exc: Exception) -> Response:
         for pre_hook in self.pre_hooks:
             pre_hook(request, exc)
 
@@ -112,10 +114,10 @@ class ExceptionHandler:
 
 
 class CorsPostHook:
-    def __init__(self: t.Self, config: CorsConfiguration) -> None:
+    def __init__(self, config: CorsConfiguration) -> None:
         self.config = config
 
-    def __call__(self: t.Self, content: dict, request: Request, response: Response) -> tuple[dict, Response]:
+    def __call__(self, content: dict, request: Request, response: Response) -> tuple[dict, Response]:
         # Since the CORSMiddleware is not executed when an unhandled server exception
         # occurs, we need to manually set the CORS headers ourselves if we want the FE
         # to receive a proper JSON 500, opposed to a CORS error.
@@ -129,7 +131,7 @@ class CorsPostHook:
         if origin:
             # Have the middleware do the heavy lifting for us to parse
             # all the config, then update our response headers
-            mw = CORSMiddleware(
+            mw = CORSMiddleware(  # ty: ignore[invalid-argument-type]
                 app=None,
                 allow_origins=self.config.allow_origins,
                 allow_credentials=self.config.allow_credentials,
@@ -159,7 +161,7 @@ class CorsPostHook:
 
 class StripExtrasPostHook:
     def __init__(
-        self: t.Self,
+        self,
         logger: logging.Logger | None = None,
         mandatory_fields: list[str] | None = None,
         exclude_status_codes: list[int] | None = None,
@@ -173,7 +175,7 @@ class StripExtrasPostHook:
         self.include_status_codes = include_status_codes or []
         self.logger = logger
 
-    def __call__(self: t.Self, content: dict, _request: Request, response: JSONResponse) -> tuple[dict, JSONResponse]:
+    def __call__(self, content: dict, _request: Request, response: JSONResponse) -> tuple[dict, JSONResponse]:
         strip_extras = self.enabled and (
             response.status_code in self.include_status_codes
             or (not self.include_status_codes and response.status_code not in self.exclude_status_codes)
