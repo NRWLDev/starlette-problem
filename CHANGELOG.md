@@ -1,5 +1,11 @@
 # Changelog
 
+## v0.13.3 - 2026-02-10
+
+### Features and Improvements
+
+- Support inclusion/exclusion in the StripExtrasPostHook via Problem type. [[b687202](https://github.com/NRWLDev/starlette-problem/commit/b6872027e270f02d419a85157d6bf7534b9f0570)]
+
 ## v0.13.2 - 2026-02-10
 
 ### Miscellaneous
