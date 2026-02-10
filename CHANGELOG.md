@@ -1,5 +1,11 @@
 # Changelog
 
+## v0.13.4 - 2026-02-10
+
+### Miscellaneous
+
+- Deprecate status_code specific parameter names in StripExtrasPostHook. [[5988fbd](https://github.com/NRWLDev/starlette-problem/commit/5988fbdfb2c994af3d740be25921ab7ff647e7c5)]
+
 ## v0.13.3 - 2026-02-10
 
 ### Features and Improvements
