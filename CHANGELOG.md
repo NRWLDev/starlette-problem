@@ -1,5 +1,12 @@
 # Changelog
 
+## v0.13.1 - 2026-02-10
+
+### Miscellaneous
+
+- Clean up type hints. [[24ea84e](https://github.com/NRWLDev/starlette-problem/commit/24ea84e5ce801361c9c1ff53c94bc9cbfea0bb05)]
+- Add latest python versions to test matrix [[14a4cb9](https://github.com/NRWLDev/starlette-problem/commit/14a4cb9828f0d3a532d7261ec8b328c5fb64de9a)]
+
 ## v0.13.0 - 2026-01-07
 
 ### Features and Improvements
