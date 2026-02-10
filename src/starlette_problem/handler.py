@@ -3,6 +3,7 @@ from __future__ import annotations
 import http
 import json
 import typing as t
+from warnings import warn
 
 import rfc9457
 from starlette.exceptions import HTTPException
@@ -161,19 +162,33 @@ class CorsPostHook:
 
 
 class StripExtrasPostHook:
-    def __init__(
+    def __init__(  # noqa: PLR0913
         self,
         logger: logging.Logger | None = None,
         mandatory_fields: list[str] | None = None,
         exclude_status_codes: list[int | str] | None = None,
         include_status_codes: list[int | str] | None = None,
+        include: list[int | str] | None = None,
+        exclude: list[int | str] | None = None,
         *,
         enabled: bool = False,
     ) -> None:
         self.mandatory_fields = mandatory_fields or ["type", "title", "status", "detail"]
         self.enabled = enabled
-        self.exclude_status_codes = exclude_status_codes or []
-        self.include_status_codes = include_status_codes or []
+        if include_status_codes:
+            warn(
+                "`StripExtraPostHook.include_status_codes` is being deprecated, use `StripExtraPostHook.include` instead.",
+                FutureWarning,
+                stacklevel=2,
+            )
+        if exclude_status_codes:
+            warn(
+                "`StripExtraPostHook.exclude_status_codes` is being deprecated, use `StripExtraPostHook.exclude` instead.",
+                FutureWarning,
+                stacklevel=2,
+            )
+        self.exclude = exclude or exclude_status_codes or []
+        self.include = include or include_status_codes or []
         self.logger = logger
 
     def __call__(self, content: dict, _request: Request, response: JSONResponse) -> tuple[dict, JSONResponse]:

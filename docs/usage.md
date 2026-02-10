@@ -59,10 +59,10 @@ allows modifying the response content. `mandatory_fields` supports defining
 fields that should always be returned, default fields are `["type", "title",
 "status", "detail"]`.
 
-For more fine-grained control, `exclude_status_codes=[500, ...]` can be used to
-allow extras for specific status codes, or types. Alternatively if you have a lot of
-exclusions, `include_status_codes=[400, ...]` can be used to determine which
-status_codes to strip extras for. Allowing expected fields to reach the user,
+For more fine-grained control, `exclude=[500, ...]` can be used to allow extras
+for specific status codes, or types. Alternatively if you have a lot of
+exclusions, `include=[400, ...]` can be used to determine which status_codes
+and/or types to strip extras for. Allowing expected fields to reach the user,
 while suppressing unexpected server errors etc.
 
 ```python
@@ -73,7 +73,7 @@ add_exception_handler(
     post_hooks=[
         StripExtrasPostHook(
             mandatory_fields=["type", "title", "status", "detail", "custom-extra"],
-            exclude_status_codes=[400],
+            exclude=[400],
             enabled=True,
         )
     ],
@@ -82,9 +82,7 @@ add_exception_handler(
 
 Additionally, exclusions can be done by type to allow stripping from unexpected
 500 errors, but allowing expected 500's through for example. The format for
-type inclusion/exclusion is `"type:my-exception-type"`. This was added later
-on, which is why the parameter name does not match the intended behaviour. This
-will be corrected in a later release.
+type inclusion/exclusion is `"type:my-exception-type"`.
 
 ```python
 from starlette_problem.handler import StripExtrasPostHook, add_exception_handler
@@ -94,7 +92,7 @@ add_exception_handler(
     post_hooks=[
         StripExtrasPostHook(
             mandatory_fields=["type", "title", "status", "detail", "custom-extra"],
-            exclude_status_codes=["type:my-bad-request"],
+            exclude=["type:my-bad-request"],
             enabled=True,
         )
     ],
