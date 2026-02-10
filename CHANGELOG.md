@@ -1,5 +1,11 @@
 # Changelog
 
+## v0.13.5 - 2026-02-10
+
+### Bug fixes
+
+- Correct usage of deprecated attributes. [[0b524a8](https://github.com/NRWLDev/starlette-problem/commit/0b524a89238926282d4275fef6a8928f43864b24)]
+
 ## v0.13.4 - 2026-02-10
 
 ### Miscellaneous
