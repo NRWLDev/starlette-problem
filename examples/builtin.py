@@ -40,7 +40,3 @@ app = starlette.applications.Starlette(
 add_exception_handler(
     app,
 )
-
-
-if __name__ == "__main__":
-    app.run()

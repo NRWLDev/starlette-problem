@@ -73,7 +73,3 @@ app = starlette.applications.Starlette(
         Route("/openapi.json", endpoint=openapi_json, include_in_schema=False),
     ],
 )
-
-
-if __name__ == "__main__":
-    app.run()

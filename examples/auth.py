@@ -49,7 +49,7 @@ class BasicAuthBackend(AuthenticationBackend):
         return AuthCredentials(["authenticated"]), SimpleUser("username")
 
 
-async def authorized(request) -> dict:
+async def authorized(request) -> JSONResponse:
     return JSONResponse(content={"authorized": request.user.is_authenticated})
 
 
@@ -57,7 +57,7 @@ app = starlette.applications.Starlette(
     routes=[
         Route("/authorized", authorized, methods=["GET"]),
     ],
-    middleware=[Middleware(AuthenticationMiddleware, backend=BasicAuthBackend())],
+    middleware=[Middleware(AuthenticationMiddleware, backend=BasicAuthBackend())],  # type: ignore[invalid-argument-type]
 )
 
 add_exception_handler(

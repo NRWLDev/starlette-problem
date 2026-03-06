@@ -42,7 +42,7 @@ def http_exception_handler(
     _request: starlette.requests.Request,
     exc: HTTPException,
 ) -> Problem:
-    exc_, detail = status_mapping.get(str(exc.status_code))
+    exc_, detail = status_mapping[str(exc.status_code)]
     return exc_(detail)
 
 
@@ -60,7 +60,3 @@ add_exception_handler(
     app,
     http_exception_handler=http_exception_handler,
 )
-
-
-if __name__ == "__main__":
-    app.run()

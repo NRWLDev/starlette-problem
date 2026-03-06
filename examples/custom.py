@@ -59,7 +59,3 @@ add_exception_handler(
         "default": CustomServer,
     },
 )
-
-
-if __name__ == "__main__":
-    app.run()
